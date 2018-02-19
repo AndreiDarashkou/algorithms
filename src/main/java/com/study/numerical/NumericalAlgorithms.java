@@ -1,4 +1,4 @@
-package com.study.numeric;
+package com.study.numerical;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ public final class NumericalAlgorithms {
     }
 
     /**
-     * нахождение простых множителей числа
+     * find prime factors
      */
     public static List<Integer> findPrimeFactors(int number) {
         List<Integer> primeFactors = new ArrayList<>();
@@ -37,7 +37,7 @@ public final class NumericalAlgorithms {
     }
 
     /**
-     * нахождение простых чисел (решето Эратосфена, sieve of Eratosthenes)
+     * find primes using sieve of Eratosthenes
      */
     public static List<Integer> findPrimes(int number) {
         boolean[] composite = new boolean[number + 1];
@@ -66,6 +66,9 @@ public final class NumericalAlgorithms {
         return primes;
     }
 
+    /**
+     * Check number using Fermat primality test
+     */
     public static boolean isPrimeNumber(int number) {
         for (int i = 0; i < 5; i++) {
             int n = (int) (Math.random() * number);

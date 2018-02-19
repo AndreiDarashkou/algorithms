@@ -1,6 +1,6 @@
 package com.study;
 
-import com.study.numeric.NumericalAlgorithms;
+import com.study.numerical.NumericalAlgorithms;
 
 import java.util.List;
 import java.util.stream.Collectors;
