@@ -85,4 +85,38 @@ public final class NumericalAlgorithms {
         return true;
     }
 
+    /**
+     * The greatest common divisor of two integers is the largest integer that
+     * evenly divides both of the numbers. Uses  Euclid’s algorithm.
+     */
+    public static int findGreatestCommonDivisor(int firstNumber, int secondNumber) {
+        while (secondNumber > 0) {
+            int remainder = firstNumber % secondNumber;
+            firstNumber = secondNumber;
+            secondNumber = remainder;
+        }
+        return firstNumber;
+    }
+
+    public static int performExponentiation(int value, int power) {
+        if (power == 0) {
+            return 1;
+        }
+        if (power == 1) {
+            return value;
+        }
+        int result = value;
+        int pow = 2;
+        while (true) {
+            result = result * result;
+            if (pow * 2 > power) {
+                break;
+            }
+            pow *= 2;
+        }
+        pow = power - pow;
+
+        return result * performExponentiation(value, pow);
+    }
+
 }
