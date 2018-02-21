@@ -3,6 +3,8 @@ package com.study.numerical;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Double.POSITIVE_INFINITY;
+
 public final class NumericalAlgorithms {
 
     private NumericalAlgorithms() {
@@ -69,10 +71,14 @@ public final class NumericalAlgorithms {
     /**
      * Check number using Fermat primality test
      */
-    public static boolean isPrimeNumber(int number) {
-        for (int i = 0; i < 5; i++) {
+    public static boolean isPrimeNumber(int number, int maxTests) {
+        for (int i = 0; i < maxTests; i++) {
             int n = (int) (Math.random() * number);
-            if (Math.pow(n, number - 1) % number != 1) {
+            double pow = Math.pow(n, number - 1);
+            if (pow == POSITIVE_INFINITY) {
+                return findPrimeFactors(number).size() == 1;
+            }
+            if (pow % number != 1) {
                 return false;
             }
         }
