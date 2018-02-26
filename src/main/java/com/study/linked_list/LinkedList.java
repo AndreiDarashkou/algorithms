@@ -11,17 +11,39 @@ public final class LinkedList<T> {
     private Element<T> last;
     private int size;
 
+    public LinkedList() {
+    }
+
+    @SafeVarargs
+    public LinkedList(T... values) {
+        for (T value : values) {
+            addLast(value);
+        }
+    }
+
     public void addFirst(T value) {
         Element<T> element = new Element<>(value);
-        element.next = first;
-        first = element;
+        if (size == 0) {
+            first = element;
+            last = element;
+        } else {
+            first.previous = element;
+            element.next = first;
+            first = element;
+        }
         size++;
     }
 
     public void addLast(T value) {
         Element<T> element = new Element<>(value);
-        element.previous = last;
-        last = element;
+        if (size == 0) {
+            first = element;
+            last = element;
+        } else {
+            last.next = element;
+            element.previous = last;
+            last = element;
+        }
         size++;
     }
 
@@ -33,6 +55,20 @@ public final class LinkedList<T> {
                     return true;
                 }
             } else if (value.equals(pointer.value)) {
+                return true;
+            }
+            pointer = pointer.next;
+        }
+        return false;
+    }
+
+    public boolean remove(T value) {
+        Element<T> pointer = first;
+        while (pointer != null) {
+            if (value == pointer.value || value.equals(pointer.value)) {
+                pointer.previous = pointer.next;
+                pointer.next = pointer.previous;
+                size--;
                 return true;
             }
             pointer = pointer.next;
