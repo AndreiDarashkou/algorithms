@@ -25,6 +25,21 @@ public final class LinkedList<T> {
         size++;
     }
 
+    public boolean contains(T value) {
+        Element<T> pointer = first;
+        while (pointer != null) {
+            if (value == null) {
+                if (pointer.value == null) {
+                    return true;
+                }
+            } else if (value.equals(pointer.value)) {
+                return true;
+            }
+            pointer = pointer.next;
+        }
+        return false;
+    }
+
     private static class Element<T> {
         T value;
         Element<T> next;
