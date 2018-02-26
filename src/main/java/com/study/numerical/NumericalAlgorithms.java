@@ -50,7 +50,7 @@ public final class NumericalAlgorithms {
         int nextPrime = 3;
         int stopAt = (int) Math.sqrt(number);
         while (nextPrime < stopAt) {
-            for (int i = nextPrime * 2; i < number; i += nextPrime) {
+            for (int i = nextPrime * nextPrime; i < number; i += nextPrime) {
                 composite[i] = true;
             }
             nextPrime += 2;
@@ -98,14 +98,14 @@ public final class NumericalAlgorithms {
         return firstNumber;
     }
 
-    public static int performExponentiation(int value, int power) {
+    public static long performExponentiation(int value, int power) {
         if (power == 0) {
             return 1;
         }
         if (power == 1) {
             return value;
         }
-        int result = value;
+        long result = value;
         int pow = 2;
         while (true) {
             result = result * result;

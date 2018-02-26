@@ -139,9 +139,15 @@ class NumericalAlgorithmsTest {
     }
 
     @Test
+    @DisplayName("Raise the number 3 to the 13th power")
+    void performExponentiationFor3To13() {
+        assertEquals(1594323, NumericalAlgorithms.performExponentiation(3, 13));
+    }
+
+    @Test
     @DisplayName("Raise the number 3 to the 31th power")
     void performExponentiationFor3To31() {
-        assertEquals(1264544299, NumericalAlgorithms.performExponentiation(3, 31));
+        assertEquals(617673396283947L, NumericalAlgorithms.performExponentiation(3, 31));
     }
 
 }
