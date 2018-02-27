@@ -73,7 +73,7 @@ public final class NumericalAlgorithms {
      */
     public static boolean isPrimeNumber(int number, int maxTests) {
         if (maxTests <= 0) {
-            maxTests = 1;
+            maxTests = 3;
         }
         for (int i = 0; i < maxTests; i++) {
             int n = (int) (Math.random() * number);
