@@ -5,18 +5,28 @@ public final class LinkedListUtil {
     private LinkedListUtil() {
     }
 
-    //TODO
-    public <T> LinkedList<T> insertionSort(LinkedList<T> list) {
+    public static <T> LinkedList<T> insertionSort(LinkedList<T> list) {
         if (!(list.getFirst() instanceof Comparable)) {
             throw new UnsupportedOperationException("Values should be comparable");
         }
         LinkedList<T> sorted = new LinkedList<>();
         for (T val : list) {
-            for (T sVal : sorted) {
-                if (((Comparable)sVal).compareTo(val) > 1) {
-                    sorted.insertAfter(sVal, val);
+            if (sorted.size() == 0) {
+                sorted.addLast(val);
+                continue;
+            }
+            T insertBeforeValue = null;
+            for (T sortedVal : sorted) {
+                int comp = ((Comparable) sortedVal).compareTo(val);
+                if (comp >= 0) {
+                    insertBeforeValue = sortedVal;
                     break;
                 }
+            }
+            if (insertBeforeValue == null) {
+                sorted.addLast(val);
+            } else {
+                sorted.insertBefore(insertBeforeValue, val);
             }
         }
         return sorted;
