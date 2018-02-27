@@ -11,14 +11,13 @@ public final class LinkedListUtil {
         }
         LinkedList<T> sorted = new LinkedList<>();
         for (T val : list) {
-            if (sorted.size() == 0) {
+            if (sorted.size() == 0 || val == null) {
                 sorted.addLast(val);
                 continue;
             }
             T insertBeforeValue = null;
             for (T sortedVal : sorted) {
-                int comp = ((Comparable) sortedVal).compareTo(val);
-                if (comp >= 0) {
+                if (sortedVal == null || ((Comparable) sortedVal).compareTo(val) >= 0) {
                     insertBeforeValue = sortedVal;
                     break;
                 }
