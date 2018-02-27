@@ -108,6 +108,12 @@ class NumericalAlgorithmsTest {
     }
 
     @Test
+    @DisplayName("Check is not prime number")
+    void checkIsNotPrimeNumber6() {
+        assertFalse(NumericalAlgorithms.isPrimeNumber(6, 0));
+    }
+
+    @Test
     @DisplayName("Find greatest common divisor for numbers 64 and 96")
     void findGreatestCommonDivisorsFor64And96() {
         assertEquals(32, NumericalAlgorithms.findGreatestCommonDivisor(64, 96));

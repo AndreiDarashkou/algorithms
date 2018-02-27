@@ -136,4 +136,11 @@ public class LinkedListTest {
         assertFalse(sourceList.equals(new java.util.LinkedList()));
     }
 
+    @Test
+    @DisplayName("Check toString method")
+    void testLinkedListToStringMethod() {
+        LinkedList<Integer> list = new LinkedList<>(null, 8, 4, null, 2);
+        assertEquals("[\"null\",\"8\",\"4\",\"null\",\"2\"]", list.toString());
+    }
+
 }
