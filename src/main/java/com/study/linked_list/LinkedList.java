@@ -43,19 +43,46 @@ public final class LinkedList<T> implements Iterable<T> {
         size++;
     }
 
-    public boolean insertAfter(T value, T insert) {
-        Element<T> element = new Element<>(insert);
+    public boolean insertAfter(T after, T value) {
+        Element<T> element = new Element<>(value);
         Element<T> pointer = first;
         while (pointer != null) {
             T val = pointer.value;
-            if (val == value || (val != null && val.equals(value))) {
+            if (val == after || (val != null && val.equals(after))) {
                 element.previous = pointer;
-                element.next = pointer.next;
-                pointer.next.previous = element;
+                if (pointer.next != null) {
+                    element.next = pointer.next;
+                    pointer.next.previous = element;
+                } else {
+                    last = element;
+                }
                 pointer.next = element;
                 size++;
                 return true;
             }
+            pointer = pointer.next;
+        }
+        return false;
+    }
+
+    public boolean insertBefore(T before, T value) {
+        Element<T> element = new Element<>(value);
+        Element<T> pointer = first;
+        while (pointer != null) {
+            T val = pointer.value;
+            if (val == before || (val != null && val.equals(before))) {
+                element.next = pointer;
+                if (pointer.previous != null) {
+                    element.previous = pointer.previous;
+                    pointer.previous.next = element;
+                } else {
+                    first = element;
+                }
+                pointer.previous = element;
+                size++;
+                return true;
+            }
+            pointer = pointer.next;
         }
         return false;
     }

@@ -143,4 +143,41 @@ public class LinkedListTest {
         assertEquals("[\"null\",\"8\",\"4\",\"null\",\"2\"]", list.toString());
     }
 
+    @Test
+    @DisplayName("Check insertion into list")
+    void testLinkedListInsertAfterMethod() {
+        LinkedList<Integer> list = new LinkedList<>(null, 8, 4, null, 2);
+        assertTrue(list.insertAfter(8, 6));
+        assertEquals(6, list.size());
+        assertTrue(list.contains(6));
+        assertEquals("[\"null\",\"8\",\"6\",\"4\",\"null\",\"2\"]", list.toString());
+    }
+
+    @Test
+    @DisplayName("Check fail insertion into list")
+    void testLinkedListInsertAfterMethodFail() {
+        LinkedList<Integer> list = new LinkedList<>(null, 8, 4, null, 2);
+        assertFalse(list.insertAfter(10, 6));
+        assertEquals(5, list.size());
+        assertFalse(list.contains(6));
+    }
+
+    @Test
+    @DisplayName("Check insertion into the end of a list")
+    void testLinkedListInsertionIntoEnd() {
+        LinkedList<Integer> list = new LinkedList<>(null, 8, 4, null, 2);
+        assertTrue(list.insertAfter(2, 6));
+        assertEquals(6, list.size());
+        assertTrue(list.contains(6));
+    }
+
+    @Test
+    @DisplayName("Check insertion before the first element")
+    void testLinkedListInsertionBeforeFirst() {
+        LinkedList<Integer> list = new LinkedList<>(null, 8, 4, null, 2);
+        assertTrue(list.insertBefore(null, 6));
+        assertEquals(6, list.size());
+        assertTrue(list.contains(6));
+    }
+
 }

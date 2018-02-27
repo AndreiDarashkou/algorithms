@@ -1,4 +1,4 @@
-package com.study.numerical;
+package com.study.algorithm;
 
 import java.util.ArrayList;
 import java.util.List;
