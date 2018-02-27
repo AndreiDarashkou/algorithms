@@ -72,6 +72,9 @@ public final class NumericalAlgorithms {
      * Check number using Fermat primality test
      */
     public static boolean isPrimeNumber(int number, int maxTests) {
+        if (maxTests <= 0) {
+            maxTests = 1;
+        }
         for (int i = 0; i < maxTests; i++) {
             int n = (int) (Math.random() * number);
             double pow = Math.pow(n, number - 1);
