@@ -9,62 +9,131 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LinkedListTest {
 
     @Test
-    @DisplayName("Linked list size equals 3")
+    @DisplayName("Size equals 3 using addLast method")
     void testLinkedListSizeAddLast() {
         LinkedList<Integer> list = new LinkedList<>();
         list.addLast(4);
         list.addLast(5);
         list.addLast(6);
-        assertEquals(3, list.getSize());
+        assertEquals(3, list.size());
     }
 
     @Test
-    @DisplayName("Linked list size equals 3 add first")
+    @DisplayName("Size equals 3 using addFirst method")
     void testLinkedListSizeAddFirst() {
         LinkedList<Integer> list = new LinkedList<>();
         list.addFirst(4);
         list.addFirst(5);
         list.addFirst(6);
-        assertEquals(3, list.getSize());
+        assertEquals(3, list.size());
     }
 
     @Test
-    @DisplayName("Linked list doesn't contain 3")
+    @DisplayName("Doesn't contain 3")
     void testLinkedListDoesntContain3() {
         LinkedList<Integer> list = new LinkedList<>(4, 5, 6);
         assertFalse(list.contains(3));
     }
 
     @Test
-    @DisplayName("Linked list contains 10")
+    @DisplayName("Contains 10")
     void testLinkedListContains10() {
         LinkedList<Integer> list = new LinkedList<>(10, 1, 14);
         assertTrue(list.contains(10));
     }
 
     @Test
-    @DisplayName("Linked list contains null")
+    @DisplayName("Contains null")
     void testLinkedListContainsNull() {
         LinkedList<Integer> list = new LinkedList<>(10, 1, 14, null);
         assertTrue(list.contains(null));
     }
 
     @Test
-    @DisplayName("Linked list remove 5")
+    @DisplayName("Remove 5")
     void testLinkedListRemove5() {
         LinkedList<Integer> list = new LinkedList<>(10, 1, 14, 5);
-        assertEquals(4, list.getSize());
+        assertEquals(4, list.size());
         assertTrue(list.remove(5));
-        assertEquals(3, list.getSize());
+        assertEquals(3, list.size());
     }
 
     @Test
-    @DisplayName("Linked list remove null")
+    @DisplayName("Check first element")
+    void checkLinkedListFirstElement() {
+        LinkedList<Integer> list = new LinkedList<>(10, 1, 14, 5);
+        assertEquals(Integer.valueOf(10), list.getFirst());
+        assertNotEquals(14, list.getFirst());
+    }
+
+    @Test
+    @DisplayName("Check last element")
+    void checkLinkedListLastElement() {
+        LinkedList<Integer> list = new LinkedList<>(10, 1, 14, 5);
+        assertEquals(Integer.valueOf(5), list.getLast());
+        assertNotEquals(14, list.getLast());
+    }
+
+    @Test
+    @DisplayName("Remove null")
     void testLinkedListRemoveNull() {
         LinkedList<Integer> list = new LinkedList<>(10, null, 14, null);
-        assertEquals(4, list.getSize());
+        assertEquals(4, list.size());
         assertTrue(list.remove(null));
-        assertEquals(3, list.getSize());
+        assertEquals(3, list.size());
+    }
+
+    @Test
+    @DisplayName("Try to remove not existed value")
+    void testLinkedListRemoveNotExisted() {
+        LinkedList<Integer> list = new LinkedList<>(10, null, 14, null);
+        assertEquals(4, list.size());
+        assertFalse(list.remove(11));
+    }
+
+    @Test
+    @DisplayName("Check copy list")
+    void testLinkedListCopy() {
+        LinkedList<Integer> sourceList = new LinkedList<>(10, 5, 14, null, 99);
+        LinkedList<Integer> copyList = sourceList.copy();
+        assertEquals(5, sourceList.size());
+        assertEquals(5, copyList.size());
+        assertTrue(sourceList.equals(copyList));
+        assertTrue(sourceList != copyList);
+    }
+
+    @Test
+    @DisplayName("Check empty list copy")
+    void testEmptyLinkedListCopy() {
+        LinkedList<Integer> sourceList = new LinkedList<>();
+        LinkedList<Integer> copyList = sourceList.copy();
+        assertEquals(0, sourceList.size());
+        assertEquals(0, copyList.size());
+        assertTrue(sourceList.equals(copyList));
+    }
+
+    @Test
+    @DisplayName("Check equals list copy")
+    void testLinkedListNotEqualCopy() {
+        LinkedList<Integer> sourceList = new LinkedList<>(1, 2, 3, 4, null, 2);
+        LinkedList<Integer> copyList = new LinkedList<>(1, 3, 4, null, 2);
+        assertFalse(sourceList.equals(copyList));
+    }
+
+    @Test
+    @DisplayName("Check not equals list copy")
+    void testLinkedListNotEqual() {
+        LinkedList<Integer> sourceList = new LinkedList<>(1, 8, 4, null, 2);
+        LinkedList<Integer> copyList = new LinkedList<>(1, 3, 4, null, 2);
+        assertFalse(sourceList.equals(copyList));
+    }
+
+    @Test
+    @DisplayName("Check not equals to obj")
+    void testLinkedListNotEqualToObj() {
+        LinkedList<Integer> sourceList = new LinkedList<>(1, 8, 4, null, 2);
+        assertFalse(sourceList.equals(null));
+        assertFalse(sourceList.equals(new java.util.LinkedList()));
     }
 
 }
