@@ -32,6 +32,7 @@ public final class LinkedListUtil {
     }
 
     public <T> LinkedList<T> selectionSort(LinkedList<T> list) {
+        //TODO
         return list;
     }
 

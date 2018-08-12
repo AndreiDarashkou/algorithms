@@ -1,6 +1,5 @@
 package com.study.algorithm;
 
-import com.study.algorithm.NumericalAlgorithms;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
