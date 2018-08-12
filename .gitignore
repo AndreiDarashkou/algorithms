@@ -4,3 +4,7 @@
 *.ipr
 .idea/
 target/
+build/
+.gradle/
+.gradletasknamecache
+!gradle-wrapper.jar

@@ -2,16 +2,28 @@ package com.study.algorithm;
 
 public final class BinarySearch {
 
-    public static Integer findElementPositionRecursive(int[] array, int left, int right, int element) {
-        int middle = (right + left) / 2;
+    private BinarySearch() {
+    }
 
-        if (element == array[middle]) {
-            return middle;
-        }
-        if (right - left == 1) {
+    public static Integer findElementPositionRecursive(int[] array, int element) {
+        if (array == null || array.length == 0) {
             return null;
         }
-        if (element > array[middle]) {
+        return findElementPositionRecursive(array, 0, array.length - 1, element);
+    }
+
+    private static Integer findElementPositionRecursive(int[] array, int left, int right, int element) {
+        int middle = (left + right) / 2;
+
+        if (right - left == 1 || left == right) {
+            if (element == array[left]) {
+                return left;
+            }
+            if (element == array[right]) {
+                return right;
+            }
+            return null;
+        } else if (element > array[middle]) {
             left = middle;
         } else {
             right = middle;
@@ -19,19 +31,31 @@ public final class BinarySearch {
         return findElementPositionRecursive(array, left, right, element);
     }
 
-    public static Integer findElementPosition(int[] array, int left, int right, int element) {
-        int middle = (right + left) / 2;
+    public static Integer findElementPosition(int[] array, int element) {
+        if (array == null || array.length == 0) {
+            return null;
+        }
+        int left = 0;
+        int right = array.length - 1;
 
-        while ((right - left) > 1) {
-            if (element == array[middle]) {
-                return middle;
-            }
+        int middle = (right + left);
+
+        while (right - left > 1) {
             if (element > array[middle]) {
                 left = middle;
             } else {
                 right = middle;
             }
             middle = (right + left) / 2;
+        }
+
+        if (right - left == 1 || left == right) {
+            if (element == array[left]) {
+                return left;
+            }
+            if (element == array[right]) {
+                return right;
+            }
         }
 
         return null;

@@ -126,10 +126,16 @@ public final class LinkedList<T> implements Iterable<T> {
     }
 
     public T getFirst() {
+        if (first == null) {
+            return null;
+        }
         return first.value;
     }
 
     public T getLast() {
+        if (last == null) {
+            return null;
+        }
         return last.value;
     }
 

@@ -2,6 +2,9 @@ package com.study.algorithm;
 
 public final class SelectionSort {
 
+    private SelectionSort(){
+    }
+
     public static int[] sort(int[] array) {
         for (int i = 0; i < array.length; i++) {
             for (int j = i; j < array.length; j++) {
