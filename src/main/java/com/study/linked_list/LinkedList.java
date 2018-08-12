@@ -106,8 +106,16 @@ public final class LinkedList<T> implements Iterable<T> {
         Element<T> pointer = first;
         while (pointer != null) {
             if ((value == null && pointer.value == null) || (value != null && value.equals(pointer.value))) {
-                pointer.previous = pointer.next;
-                pointer.next = pointer.previous;
+                if (pointer.previous != null) {
+                    pointer.previous.next = pointer.next;
+                } else {
+                    first = pointer.next;
+                }
+                if (pointer.next != null) {
+                    pointer.next.previous = pointer.previous;
+                } else {
+                    last = pointer.previous;
+                }
                 size--;
                 return true;
             }
@@ -180,7 +188,7 @@ public final class LinkedList<T> implements Iterable<T> {
         StringBuilder string = new StringBuilder("[");
         Element<T> pointer = first;
         while (pointer != null) {
-            string.append("\"").append(pointer.value).append("\"").append(",");
+            string.append(pointer.value).append(",");
             pointer = pointer.next;
         }
         string.setLength(string.length() - 1);
