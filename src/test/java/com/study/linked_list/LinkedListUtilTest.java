@@ -17,7 +17,7 @@ public class LinkedListUtilTest {
         assertEquals(5, sorted.size());
         assertEquals(Integer.valueOf(1), sorted.getFirst());
         assertEquals(Integer.valueOf(7), sorted.getLast());
-        assertEquals("[\"1\",\"2\",\"3\",\"5\",\"7\"]", sorted.toString());
+        assertEquals("[1,2,3,5,7]", sorted.toString());
     }
 
     @Test
@@ -28,15 +28,18 @@ public class LinkedListUtilTest {
         assertEquals(11, sorted.size());
         assertEquals(Integer.valueOf(1), sorted.getFirst());
         assertEquals(null, sorted.getLast());
-        assertEquals("[\"1\",\"2\",\"3\",\"5\",\"7\",\"18\",\"88\",\"99\",\"311\",\"null\",\"null\"]", sorted.toString());
+        assertEquals("[1,2,3,5,7,18,88,99,311,null,null]", sorted.toString());
     }
 
-
     @Test
-    @DisplayName("Should throw an exception if values are not comparable")
-    void shouldThrowExceptionIfElementsAreNotComparable() {
-        LinkedList<?> list = new LinkedList<>(new Object(), new Object());
-        assertThrows(UnsupportedOperationException.class, () -> LinkedListUtil.insertionSort(list));
+    @DisplayName("Linked List should be sorted using selection sort method")
+    void testLinkedListSelectionSort() {
+        LinkedList<Integer> list = new LinkedList<>(6, 7, 5, 2, 3);
+        LinkedList<Integer> sorted = LinkedListUtil.selectionSort(list);
+        assertEquals(5, sorted.size());
+        assertEquals(Integer.valueOf(2), sorted.getFirst());
+        assertEquals(Integer.valueOf(7), sorted.getLast());
+        assertEquals("[2,3,5,6,7]", sorted.toString());
     }
 
 }

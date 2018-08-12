@@ -56,6 +56,9 @@ public class LinkedListTest {
         assertEquals(4, list.size());
         assertTrue(list.remove(5));
         assertEquals(3, list.size());
+        assertFalse(list.contains(5));
+        assertNotEquals(5, list.getLast());
+        assertEquals(Integer.valueOf(14), list.getLast());
     }
 
     @Test
@@ -140,7 +143,7 @@ public class LinkedListTest {
     @DisplayName("Check toString method")
     void testLinkedListToStringMethod() {
         LinkedList<Integer> list = new LinkedList<>(null, 8, 4, null, 2);
-        assertEquals("[\"null\",\"8\",\"4\",\"null\",\"2\"]", list.toString());
+        assertEquals("[null,8,4,null,2]", list.toString());
     }
 
     @Test
@@ -150,7 +153,7 @@ public class LinkedListTest {
         assertTrue(list.insertAfter(8, 6));
         assertEquals(6, list.size());
         assertTrue(list.contains(6));
-        assertEquals("[\"null\",\"8\",\"6\",\"4\",\"null\",\"2\"]", list.toString());
+        assertEquals("[null,8,6,4,null,2]", list.toString());
     }
 
     @Test
