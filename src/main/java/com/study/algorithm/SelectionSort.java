@@ -1,22 +1,22 @@
 package com.study.algorithm;
 
+import static com.study.algorithm.util.ArrayUtils.swap;
+
 public final class SelectionSort {
 
-    private SelectionSort(){
+    private SelectionSort() {
     }
 
-    public static int[] sort(int[] array) {
+    public static void sort(int[] array) {
         for (int i = 0; i < array.length; i++) {
-            for (int j = i; j < array.length; j++) {
-                if (array[i] > array[j]) {
-                    int temp = array[i];
-                    array[i] = array[j];
-                    array[j] = temp;
+            int min = i;
+            for (int j = min; j < array.length; j++) {
+                if (array[min] > array[j]) {
+                    min = j;
                 }
             }
+            swap(array, i, min);
         }
-
-        return array;
     }
 
 }

@@ -16,7 +16,7 @@ class BinarySearchTest extends Specification {
         [0, 8, 10, 12, 33]               | 12      || 3
         [2, 3, 5, 9]                     | 9       || 3
         [3]                              | 1       || null
-        [5, 8, 16, 78]                   | 44       | null
+        [5, 8, 16, 78]                   | 44      || null
         [1, 2, 3]                        | 2       || 1
         [1, 1, 1, 2, 3]                  | 1       || 0
         []                               | 2       || null
@@ -36,7 +36,7 @@ class BinarySearchTest extends Specification {
         [0, 8, 10, 12, 33]               | 12     || 3
         [2, 3, 5, 9]                     | 9      || 3
         [3]                              | 1      || null
-        [5, 8, 16, 78]                   | 44      | null
+        [5, 8, 16, 78]                   | 44     || null
         [1, 2, 3]                        | 2      || 1
         [1, 1, 1, 2, 3]                  | 1      || 0
         []                               | 2      || null
