@@ -1,17 +1,18 @@
-package com.study.algorithm
+package com.study.algorithm.sort
 
+import com.study.algorithm.sort.BubbleSort
 import spock.lang.Specification
 import spock.lang.Unroll
 
 
-class InsertionSortTest extends Specification {
+class BubbleSortTest extends Specification {
 
     @Unroll
-    def "test Insertion sort method"() {
+    def "test bubble sort method"() {
         given:
         def array = elements as int[]
         when:
-        InsertionSort.sort(array)
+        BubbleSort.sort(array)
         then:
         array == result.toArray()
         where:
