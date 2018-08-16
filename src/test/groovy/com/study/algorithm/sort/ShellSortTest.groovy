@@ -1,17 +1,18 @@
-package com.study.algorithm
+package com.study.algorithm.sort
 
+import com.study.algorithm.sort.BubbleSort
 import spock.lang.Specification
 import spock.lang.Unroll
 
 
-class SelectionSortTest extends Specification {
+class ShellSortTest extends Specification {
 
     @Unroll
-    def "test selection sort method"() {
+    def "test bubble sort method"() {
         given:
         def array = elements as int[]
         when:
-        SelectionSort.sort(array)
+        ShellSort.sort(array)
         then:
         array == result.toArray()
         where:
@@ -25,4 +26,18 @@ class SelectionSortTest extends Specification {
         [3, 2, 1, 1, 1, 7, 8, 9, 2, 1] | [1, 1, 1, 1, 2, 2, 3, 7, 8, 9]
     }
 
+
+    @Unroll
+    def "test incSedgewick method"() {
+        expect:
+        ShellSort.incSedgewick(arraySize) == result
+        where:
+        arraySize || result
+        5         || [1, 6]
+        10        || [1, 6]
+        15        || [1, 6]
+        50        || [1, 6, 16, 47]
+        400       || [1, 6, 16, 47, 95, 238]
+        100000    || [1, 6, 16, 47, 95, 238, 445, 1051, 1913, 4405, 7921, 18025, 32225, 72914]
+    }
 }

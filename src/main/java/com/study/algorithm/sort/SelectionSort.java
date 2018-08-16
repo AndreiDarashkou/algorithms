@@ -1,4 +1,4 @@
-package com.study.algorithm;
+package com.study.algorithm.sort;
 
 import static com.study.algorithm.util.ArrayUtils.swap;
 
