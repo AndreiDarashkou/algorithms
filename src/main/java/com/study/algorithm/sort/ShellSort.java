@@ -13,19 +13,9 @@ public class ShellSort {
     public static void sort(int array[]) {
         List<Integer> incList = incSedgewick(array.length);
         Collections.reverse(incList);
-        int[] incArray = incList.stream().mapToInt(Integer::intValue).toArray();
 
-        for (int step : incArray) {
-            for (int j = step; j < array.length; j += step) {
-                int curVal = array[j];
-                int comparedPointer = j - step;
-
-                while (comparedPointer >= 0 && array[comparedPointer] > curVal) {
-                    array[comparedPointer + step] = array[comparedPointer];
-                    comparedPointer -= step;
-                }
-                array[comparedPointer + step] = curVal;
-            }
+        for (int step : incList) {
+            InsertionSort.sort(array, step);
         }
     }
 

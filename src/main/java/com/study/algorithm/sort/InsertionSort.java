@@ -7,15 +7,19 @@ public class InsertionSort {
     }
 
     public static void sort(int array[]) {
-        for (int i = 1; i < array.length; i++) {
+        sort(array, 1);
+    }
+
+    static void sort(int array[], int step) {
+        for (int i = step; i < array.length; i += step) {
             int curVal = array[i];
-            int comparedPointer = i - 1;
+            int comparedPointer = i - step;
 
             while (comparedPointer >= 0 && array[comparedPointer] > curVal) {
-                array[comparedPointer + 1] = array[comparedPointer];
-                comparedPointer--;
+                array[comparedPointer + step] = array[comparedPointer];
+                comparedPointer -= step;
             }
-            array[comparedPointer + 1] = curVal;
+            array[comparedPointer + step] = curVal;
         }
     }
 
