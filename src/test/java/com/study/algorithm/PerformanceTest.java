@@ -4,6 +4,7 @@ package com.study.algorithm;
 import com.study.algorithm.sort.BubbleSort;
 import com.study.algorithm.sort.CombSort;
 import com.study.algorithm.sort.InsertionSort;
+import com.study.algorithm.sort.QuickSort;
 import com.study.algorithm.util.Stopwatch;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class PerformanceTest {
 
     @Before
     public void initArray() {
-        array = IntStream.rangeClosed(0, 50_000).boxed().collect(
+        array = IntStream.rangeClosed(0, 100_000).boxed().collect(
                 Collectors.collectingAndThen(Collectors.toList(), list -> {
                     Collections.shuffle(list);
                     return list;
@@ -70,8 +71,17 @@ public class PerformanceTest {
     @Test
     public void arraysSortTest() {
         int[] copy = array.clone();
-        Stopwatch stopwatch = new Stopwatch("Selection sort").start();
+        Stopwatch stopwatch = new Stopwatch("java.util.Arrays sort").start();
         Arrays.sort(copy);
         System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
     }
+
+    @Test
+    public void quickSortTest() {
+        int[] copy = array.clone();
+        Stopwatch stopwatch = new Stopwatch("Quick sort").start();
+        QuickSort.sort(copy);
+        System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
+    }
+
 }
