@@ -1,10 +1,6 @@
-package com.study.algorithm;
+package com.study.algorithm.sort;
 
 
-import com.study.algorithm.sort.BubbleSort;
-import com.study.algorithm.sort.CombSort;
-import com.study.algorithm.sort.InsertionSort;
-import com.study.algorithm.sort.QuickSort;
 import com.study.algorithm.util.Stopwatch;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,6 +77,14 @@ public class PerformanceTest {
         int[] copy = array.clone();
         Stopwatch stopwatch = new Stopwatch("Quick sort").start();
         QuickSort.sort(copy);
+        System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
+    }
+
+    @Test
+    public void countingSortTest() {
+        int[] copy = array.clone();
+        Stopwatch stopwatch = new Stopwatch("Counting sort").start();
+        CountingSort.sort(copy);
         System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
     }
 
