@@ -88,4 +88,11 @@ public class PerformanceTest {
         System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
     }
 
+    @Test
+    public void heapSortTest() {
+        int[] copy = array.clone();
+        Stopwatch stopwatch = new Stopwatch("Counting sort").start();
+        HeapSort.sort(copy);
+        System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
+    }
 }
