@@ -91,8 +91,16 @@ public class PerformanceTest {
     @Test
     public void heapSortTest() {
         int[] copy = array.clone();
-        Stopwatch stopwatch = new Stopwatch("Counting sort").start();
+        Stopwatch stopwatch = new Stopwatch("Heap sort").start();
         HeapSort.sort(copy);
+        System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
+    }
+
+    @Test
+    public void mergeSortTest() {
+        int[] copy = array.clone();
+        Stopwatch stopwatch = new Stopwatch("Merge sort").start();
+        MergeSort.sort(copy);
         System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
     }
 }
