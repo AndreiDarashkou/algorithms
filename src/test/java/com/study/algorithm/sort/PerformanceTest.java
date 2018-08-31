@@ -33,6 +33,14 @@ public class PerformanceTest {
     }
 
     @Test
+    public void shakerTest() {
+        int[] copy = array.clone();
+        Stopwatch stopwatch = new Stopwatch("Shaker sort").start();
+        ShakerSort.sort(copy);
+        System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
+    }
+
+    @Test
     public void combTest() {
         int[] copy = array.clone();
         Stopwatch stopwatch = new Stopwatch("Comb sort").start();

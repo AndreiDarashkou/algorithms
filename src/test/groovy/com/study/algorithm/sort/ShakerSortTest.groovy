@@ -1,18 +1,17 @@
 package com.study.algorithm.sort
 
-import com.study.algorithm.sort.BubbleSort
 import spock.lang.Specification
 import spock.lang.Unroll
 
 
-class BubbleSortTest extends Specification {
+class ShakerSortTest extends Specification {
 
     @Unroll
     def "test bubble sort method"() {
         given:
         def array = elements as int[]
         when:
-        BubbleSort.sort(array)
+        ShakerSort.sort(array)
         then:
         array == result.toArray()
         where:
