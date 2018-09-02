@@ -1,18 +1,20 @@
 package com.study.algorithm.sort;
 
 
+import com.study.algorithm.util.ArrayUtils;
+
 public class CountingSort {
 
     private CountingSort() {
     }
 
     public static void sort(int[] array) {
-        if (array == null || array.length < 1) {
+        if (array == null || array.length < 2) {
             return;
         }
 
-        int min = minValue(array);
-        int max = maxValue(array);
+        int min = ArrayUtils.minValue(array);
+        int max = ArrayUtils.maxValue(array);
         int[] countArray = new int[max - min + 1];
 
         for (int i : array) {
@@ -28,23 +30,4 @@ public class CountingSort {
         }
     }
 
-    private static int minValue(int[] array) {
-        int min = array[0];
-        for (int val : array) {
-            if (val < min) {
-                min = val;
-            }
-        }
-        return min;
-    }
-
-    private static int maxValue(int[] array) {
-        int max = array[0];
-        for (int val : array) {
-            if (val > max) {
-                max = val;
-            }
-        }
-        return max;
-    }
 }

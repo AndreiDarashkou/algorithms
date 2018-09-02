@@ -122,4 +122,17 @@ public final class NumericalAlgorithms {
         return result * performExponentiation(value, pow);
     }
 
+    public static int floorPowerOfTwo(int x) {
+        x = x | (x >> 1);
+        x = x | (x >> 2);
+        x = x | (x >> 4);
+        x = x | (x >> 8);
+        x = x | (x >> 16);
+        return x - (x >> 1);
+    }
+
+    public static int ceilPowerOfTwo(int x) {
+        return floorPowerOfTwo(x) * 2;
+    }
+
 }
