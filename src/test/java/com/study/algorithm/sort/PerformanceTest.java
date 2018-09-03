@@ -41,6 +41,14 @@ public class PerformanceTest {
     }
 
     @Test
+    public void radixTest() {
+        int[] copy = array.clone();
+        Stopwatch stopwatch = new Stopwatch("Radix sort").start();
+        RadixSort.sort(copy);
+        System.out.println(stopwatch.stop().prettyPrintString(TimeUnit.SECONDS));
+    }
+
+    @Test
     public void shakerTest() {
         int[] copy = array.clone();
         Stopwatch stopwatch = new Stopwatch("Shaker sort").start();
