@@ -3,7 +3,7 @@ package com.study.algorithm.sort;
 
 import com.study.algorithm.util.ArrayUtils;
 
-public class CountingSort {
+public final class CountingSort {
 
     private CountingSort() {
     }
@@ -15,7 +15,7 @@ public class CountingSort {
 
         int min = ArrayUtils.minValue(array);
         int max = ArrayUtils.maxValue(array);
-        int[] countArray = new int[max - min + 1];
+        int[] countArray = new int[max - min + 1]; //for negative values
 
         for (int i : array) {
             countArray[i - min] = countArray[i - min] + 1;

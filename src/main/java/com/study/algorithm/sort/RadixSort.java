@@ -1,6 +1,5 @@
 package com.study.algorithm.sort;
 
-
 import com.study.algorithm.util.ArrayUtils;
 
 import java.util.ArrayList;
@@ -8,30 +7,36 @@ import java.util.List;
 
 import static com.study.algorithm.util.ArrayUtils.toArray;
 
-public class BucketSort {
+public final class RadixSort {
 
-    private BucketSort() {
+    private RadixSort() {
     }
 
     public static void sort(int[] array) {
-        sort(array, (int) Math.ceil(Math.pow(array.length, 0.5)));
+        int max = ArrayUtils.maxValue(array);
+        int radix = (int) Math.log10(max);
+        int base = (int) Math.pow(10, radix);
+        bucketSort(array, base);
     }
 
-    public static void sort(int[] array, int bucketSize) {
+
+    public static void bucketSort(int[] array, int base) {
         if (array == null || array.length < 2) {
             return;
         }
-        int min = ArrayUtils.minValue(array);
-        int max = ArrayUtils.maxValue(array);
-        int range = max - min;
-        List<Integer>[] buckets = getBuckets(bucketSize, range);
+        if (base == 1) {
+            CountingSort.sort(array);
+            return;
+        }
+        List<Integer>[] buckets = getBuckets();
         for (int val : array) {
-            buckets[(val - min) / bucketSize].add(val);
+            int index = (val % (base * 10)) / base;
+            buckets[index].add(val);
         }
         int resIndex = 0;
         for (List<Integer> bucket : buckets) {
             int[] arrBucket = toArray(bucket);
-            InsertionSort.sort(arrBucket);
+            bucketSort(arrBucket, base / 10);
             for (int val : arrBucket) {
                 array[resIndex] = val;
                 resIndex++;
@@ -40,8 +45,8 @@ public class BucketSort {
     }
 
     @SuppressWarnings("unchecked")
-    private static List<Integer>[] getBuckets(int bucketSize, int range) {
-        List<Integer>[] buckets = new ArrayList[(range / bucketSize) + 1];
+    private static List<Integer>[] getBuckets() {
+        List<Integer>[] buckets = new ArrayList[10];
         for (int i = 0; i < buckets.length; i++) {
             buckets[i] = new ArrayList<>();
         }
