@@ -1,5 +1,6 @@
-package com.study.algorithm
+package com.study.algorithm.search
 
+import com.study.algorithm.search.BinarySearch
 import spock.lang.Specification
 import spock.lang.Unroll
 
