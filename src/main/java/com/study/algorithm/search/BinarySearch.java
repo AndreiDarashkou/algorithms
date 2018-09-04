@@ -38,7 +38,7 @@ public final class BinarySearch {
         int left = 0;
         int right = array.length - 1;
 
-        int middle = (right + left);
+        int middle = (right + left) / 2;
 
         while (right - left > 1) {
             if (element > array[middle]) {
