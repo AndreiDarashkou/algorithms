@@ -8,6 +8,12 @@ public interface HashTable<K, V> {
 
     V remove(K key);
 
+    int size();
+
+    int capacity();
+
+    float loadFactor();
+
     class Entry<K, V> {
         K key;
         V value;

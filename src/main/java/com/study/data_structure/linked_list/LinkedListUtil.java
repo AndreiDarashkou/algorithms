@@ -14,7 +14,7 @@ public final class LinkedListUtil {
             }
             T insertBeforeValue = null;
             for (T sortedVal : sorted) {
-                if (sortedVal == null || ((Comparable) sortedVal).compareTo(val) >= 0) {
+                if (sortedVal == null || sortedVal.compareTo(val) >= 0) {
                     insertBeforeValue = sortedVal;
                     break;
                 }

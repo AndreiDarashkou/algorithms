@@ -67,8 +67,8 @@ class ChainingHashTableTest extends Specification {
         where:
         elements                                                                              | initCapacity | loadFactor | capacity | size
         [1, 4, 5, 7, 8, 9, 12, 13, 16, 19, 67, 65, 45, 34, 21, 23, 49, 76, 41]                | 30           | 0.75       | 30       | 19
-        [1, 4, 5, 7, 8, 9, 12, 13, 16, 19, 67, 65, 45, 34, 21, 23, 49, 76, 41, 88, 99, 45]    | 10           | 0.75       | 40       | 21
-        [9, 1, 77, 67, 66, 4, 5, 7, 8, 9, 12, 13, 16, 19, 67, 65, 45, 34, 21, 23, 49, 76, 41] | 10           | 0.5        | 80       | 21
+        [1, 4, 5, 7, 8, 9, 12, 13, 16, 19, 67, 65, 45, 34, 21, 23, 49, 76, 41, 88, 99, 45]    | 10           | 0.75       | 32       | 21
+        [9, 1, 77, 67, 66, 4, 5, 7, 8, 9, 12, 13, 16, 19, 67, 65, 45, 34, 21, 23, 49, 76, 41] | 10           | 0.5        | 64       | 21
     }
 
     @Unroll
@@ -82,31 +82,31 @@ class ChainingHashTableTest extends Specification {
         table.capacity() == capacity
         where:
         initCapacity | initLoadFactor | capacity | loadFactor
-        30           | 0.75           | 30       | 0.75d
-        10           | 0.85           | 10       | 0.85d
-        10           | 0.5            | 10       | 0.5d
-        20           | -0.25          | 20       | 0.25d
+        30           | 0.75           | 30       | 0.75f
+        10           | 0.85           | 16       | 0.85f
+        10           | 0.5            | 16       | 0.5f
+        20           | -0.25          | 20       | 0.25f
     }
 
     def "Test ChainingHashTable default constructor"() {
         given:
         def table = new ChainingHashTable<Integer, Integer>()
         expect:
-        table.loadFactor() == 0.75d
-        table.capacity() == 10
+        table.loadFactor() == 0.75f
+        table.capacity() == 16
     }
 
     def "Test ChainingHashTable capacity constructor"() {
         given:
         def table = new ChainingHashTable<Integer, Integer>(initCapacity)
         expect:
-        table.loadFactor() == 0.75d
+        table.loadFactor() == 0.75f
         table.capacity() == capacity
         where:
         initCapacity | capacity
         30           | 30
-        10           | 10
-        10           | 10
+        10           | 16
+        10           | 16
         20           | 20
     }
 
@@ -114,15 +114,15 @@ class ChainingHashTableTest extends Specification {
         given:
         def table = new ChainingHashTable<Integer, Integer>(initLoadFactor)
         expect:
-        table.capacity() == 10
+        table.capacity() == 16
         table.loadFactor() == loadFactor
         where:
         initLoadFactor | loadFactor
-        0.7d           | 0.7d
-        0.6d           | 0.6d
-        0.3d           | 0.3d
-        0.2d           | 0.25d
-        -0.1d          | 0.25d
+        0.7f           | 0.7f
+        0.6f           | 0.6f
+        0.3f           | 0.3f
+        0.2f           | 0.25f
+        -0.1f          | 0.25f
     }
 
 }

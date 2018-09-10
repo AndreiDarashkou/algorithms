@@ -6,11 +6,12 @@ import java.util.List;
 
 public class ChainingHashTable<K, V> implements HashTable<K, V> {
 
-    private static final int INITIAL_CAPACITY = 10;
-    private static final double INITIAL_LOAD_FACTOR = 0.75d;
+    private static final int INITIAL_CAPACITY = 1 << 4;
+    private static final int MAX_CAPACITY = 1 << 29;
+    private static final float INITIAL_LOAD_FACTOR = 0.75f;
 
-    private List<Bucket<K, V>> buckets;
-    private double loadFactor;
+    private volatile List<Bucket> buckets;
+    private float loadFactor;
     private int capacity;
     private int size;
 
@@ -22,11 +23,11 @@ public class ChainingHashTable<K, V> implements HashTable<K, V> {
         initBuckets(initialCapacity, INITIAL_LOAD_FACTOR);
     }
 
-    public ChainingHashTable(double loadFactor) {
+    public ChainingHashTable(float loadFactor) {
         initBuckets(INITIAL_CAPACITY, loadFactor);
     }
 
-    public ChainingHashTable(int initialCapacity, double loadFactor) {
+    public ChainingHashTable(int initialCapacity, float loadFactor) {
         initBuckets(initialCapacity, loadFactor);
     }
 
@@ -34,7 +35,7 @@ public class ChainingHashTable<K, V> implements HashTable<K, V> {
     public void put(K key, V value) {
         buckets.get(getIndex(key)).put(key, value);
         if (size > loadFactor * capacity) {
-            rehash();
+            rehash(capacity >= MAX_CAPACITY ? MAX_CAPACITY : capacity << 1);
         }
     }
 
@@ -45,43 +46,47 @@ public class ChainingHashTable<K, V> implements HashTable<K, V> {
 
     @Override
     public V remove(K key) {
-        return buckets.get(getIndex(key)).remove(key);
+        V removed = buckets.get(getIndex(key)).remove(key);
+        if (size < 0.25f * capacity && capacity > INITIAL_CAPACITY) {
+            rehash(capacity >> 1);
+        }
+        return removed;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
-
+    @Override
     public int capacity() {
         return capacity;
     }
 
-    public double loadFactor() {
+    @Override
+    public float loadFactor() {
         return loadFactor;
     }
 
-    private void rehash() {
-        synchronized (buckets) {
-            List<Bucket<K, V>> oldBuckets = buckets;
-            capacity *= 2;
-            initBuckets(capacity, loadFactor);
+    private void rehash(int capacity) {
+        final List<Bucket> oldBuckets = buckets;
+        initBuckets(capacity, loadFactor);
 
-            for (Bucket<K, V> bucket : oldBuckets) {
-                for (Entry<K, V> entry : bucket.elements) {
-                    put(entry.key, entry.value);
-                }
+        for (Bucket bucket : oldBuckets) {
+            for (Entry<K, V> entry : bucket.elements) {
+                put(entry.key, entry.value);
             }
         }
     }
 
-    private void initBuckets(int initialCapacity, double loadFactor) {
+    private void initBuckets(int initialCapacity, float loadFactor) {
+        initialCapacity = Math.min(Math.max(initialCapacity, INITIAL_CAPACITY), MAX_CAPACITY);
         this.buckets = new ArrayList<>(initialCapacity);
         for (int i = 0; i < initialCapacity; i++) {
-            this.buckets.add(new Bucket<K, V>());
+            this.buckets.add(new Bucket());
         }
-        if (loadFactor < 0.25d) {
-            loadFactor = 0.25d;
+        if (loadFactor < 0.25f) {
+            loadFactor = 0.25f;
         }
         this.loadFactor = loadFactor;
         this.capacity = initialCapacity;
@@ -102,14 +107,14 @@ public class ChainingHashTable<K, V> implements HashTable<K, V> {
                 '}';
     }
 
-    class Bucket<K, V> {
+    class Bucket {
         private List<Entry<K, V>> elements;
 
         Bucket() {
             elements = new ArrayList<>(0);
         }
 
-        public void put(K key, V value) {
+        void put(K key, V value) {
             for (Entry<K, V> next : elements) {
                 if (next.key.equals(key)) {
                     next.value = value;
@@ -120,7 +125,7 @@ public class ChainingHashTable<K, V> implements HashTable<K, V> {
             size++;
         }
 
-        public V get(K key) {
+        V get(K key) {
             for (Entry<K, V> next : elements) {
                 if (next.key.equals(key)) {
                     return next.value;
@@ -129,7 +134,7 @@ public class ChainingHashTable<K, V> implements HashTable<K, V> {
             return null;
         }
 
-        public V remove(K key) {
+        V remove(K key) {
             Iterator<Entry<K, V>> it = elements.iterator();
             while (it.hasNext()) {
                 Entry<K, V> element = it.next();
