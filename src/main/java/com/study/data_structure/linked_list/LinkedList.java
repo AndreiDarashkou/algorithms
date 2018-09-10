@@ -1,4 +1,4 @@
-package com.study.linked_list;
+package com.study.data_structure.linked_list;
 
 import java.util.Iterator;
 
