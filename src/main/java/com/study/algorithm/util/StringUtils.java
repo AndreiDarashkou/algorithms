@@ -1,10 +1,13 @@
 package com.study.algorithm.util;
 
-public class StringUtils {
+public final class StringUtils {
 
     private StringUtils() {
     }
 
+    /**
+     * From http://www.codewars.com
+     */
     public static String reverseWords(final String original) {
         char[] chars = original.toCharArray();
         for (int i = 0; i < chars.length; i++) {

@@ -66,7 +66,7 @@ class ChainingHashTableTest extends Specification {
         println(table)
         where:
         elements                                                                              | initCapacity | loadFactor | capacity | size
-        [1, 4, 5, 7, 8, 9, 12, 13, 16, 19, 67, 65, 45, 34, 21, 23, 49, 76, 41]                | 30           | 0.75       | 30       | 19
+        [1, 4, 5, 7, 8, 9, 12, 13, 16, 19, 67, 65, 45, 34, 21, 23, 49, 76, 41]                | 30           | 0.75       | 32       | 19
         [1, 4, 5, 7, 8, 9, 12, 13, 16, 19, 67, 65, 45, 34, 21, 23, 49, 76, 41, 88, 99, 45]    | 10           | 0.75       | 32       | 21
         [9, 1, 77, 67, 66, 4, 5, 7, 8, 9, 12, 13, 16, 19, 67, 65, 45, 34, 21, 23, 49, 76, 41] | 10           | 0.5        | 64       | 21
     }
@@ -82,10 +82,10 @@ class ChainingHashTableTest extends Specification {
         table.capacity() == capacity
         where:
         initCapacity | initLoadFactor | capacity | loadFactor
-        30           | 0.75           | 30       | 0.75f
+        30           | 0.75           | 32       | 0.75f
         10           | 0.85           | 16       | 0.85f
         10           | 0.5            | 16       | 0.5f
-        20           | -0.25          | 20       | 0.25f
+        20           | -0.25          | 32       | 0.25f
     }
 
     def "Test ChainingHashTable default constructor"() {
@@ -104,10 +104,10 @@ class ChainingHashTableTest extends Specification {
         table.capacity() == capacity
         where:
         initCapacity | capacity
-        30           | 30
+        30           | 32
         10           | 16
         10           | 16
-        20           | 20
+        20           | 32
     }
 
     def "Test ChainingHashTable loadFactor constructor"() {

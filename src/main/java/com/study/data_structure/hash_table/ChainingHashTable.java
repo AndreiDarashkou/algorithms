@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.study.algorithm.NumericalAlgorithms.ceilPowerOfTwo;
+
 public class ChainingHashTable<K, V> implements HashTable<K, V> {
 
     private static final int INITIAL_CAPACITY = 1 << 4;
@@ -20,6 +22,7 @@ public class ChainingHashTable<K, V> implements HashTable<K, V> {
     }
 
     public ChainingHashTable(int initialCapacity) {
+        initialCapacity = ceilPowerOfTwo(initialCapacity);
         initBuckets(initialCapacity, INITIAL_LOAD_FACTOR);
     }
 
@@ -28,6 +31,7 @@ public class ChainingHashTable<K, V> implements HashTable<K, V> {
     }
 
     public ChainingHashTable(int initialCapacity, float loadFactor) {
+        initialCapacity = ceilPowerOfTwo(initialCapacity);
         initBuckets(initialCapacity, loadFactor);
     }
 
