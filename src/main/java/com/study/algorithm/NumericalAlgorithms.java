@@ -11,7 +11,7 @@ public final class NumericalAlgorithms {
     }
 
     /**
-     * find prime factors
+     * find prime factors O(sqrt(N))
      */
     public static List<Integer> findPrimeFactors(int number) {
         List<Integer> primeFactors = new ArrayList<>();
@@ -35,6 +35,20 @@ public final class NumericalAlgorithms {
             primeFactors.add(number);
         }
 
+        return primeFactors;
+    }
+
+    /**
+     * find prime factors without check duplicates and even fields O(N)
+     */
+    public static List<Integer> findPrimeFactorsSlower(int number) {
+        List<Integer> primeFactors = new ArrayList<>();
+        for (int i = 2; i <= number; ++i) {
+            while(number % i == 0) {
+                number /= i;
+                primeFactors.add(i);
+            }
+        }
         return primeFactors;
     }
 
