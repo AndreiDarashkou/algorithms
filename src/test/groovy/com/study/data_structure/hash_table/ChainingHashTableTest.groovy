@@ -125,4 +125,21 @@ class ChainingHashTableTest extends Specification {
         -0.1f          | 0.25f
     }
 
+
+    def "test identity with java.util.HashMap"() {
+        given:
+        def table = new ChainingHashTable<Integer, Integer>()
+        def values = new HashMap<Integer, Integer>()
+        when:
+        for (int i = 0; i < 10000; i++) {
+            int randIndex = (int) (Math.random() * i)
+            table.put(randIndex, i * 2)
+            values.put(randIndex, table.get(randIndex))
+        }
+        println(table)
+        then:
+        table.size() == values.size()
+        values.each { k, v -> assert table.get(k) == v }
+    }
+
 }

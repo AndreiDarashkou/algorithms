@@ -33,7 +33,7 @@ public class OpenAddressingHashTable<K, V> implements HashTable<K, V> {
 
     public OpenAddressingHashTable(ProbingType probingType,int initialCapacity) {
         this.probingStrategy = ProbingFactory.getStrategy(probingType);
-        init(initialCapacity, INITIAL_LOAD_FACTOR);
+        init(ceilPowerOfTwo(initialCapacity), INITIAL_LOAD_FACTOR);
     }
 
     public OpenAddressingHashTable(ProbingType probingType, float loadFactor) {
@@ -43,7 +43,7 @@ public class OpenAddressingHashTable<K, V> implements HashTable<K, V> {
 
     public OpenAddressingHashTable(ProbingType probingType, int initialCapacity, float loadFactor) {
         this.probingStrategy = ProbingFactory.getStrategy(probingType);
-        init(initialCapacity, loadFactor);
+        init(ceilPowerOfTwo(initialCapacity), loadFactor);
     }
 
     @Override
@@ -128,10 +128,9 @@ public class OpenAddressingHashTable<K, V> implements HashTable<K, V> {
         if (capacity == MAX_CAPACITY) {
             throw new IllegalStateException("Cannot add more elements");
         }
-        size = 0;
-        capacity = capacity << 1;
         Entry<K, V>[] oldElements = elements;
-        elements = new Entry[capacity];
+        capacity = capacity << 1;
+        init(capacity, loadFactor);
         for (Entry<K,V> entry: oldElements) {
             if (entry != null && entry != EMPTY) {
                 put(entry.key, entry.value);
@@ -140,10 +139,10 @@ public class OpenAddressingHashTable<K, V> implements HashTable<K, V> {
     }
 
     @SuppressWarnings("unchecked")
-    private void init(int initialCapacity, float loadFactor) {
+    private void init(int capacity, float loadFactor) {
         this.size = 0;
-        this.loadFactor = loadFactor;
-        this.capacity = ceilPowerOfTwo(initialCapacity);
+        this.loadFactor = loadFactor >= 0.25f ? loadFactor : 0.25f;
+        this.capacity = capacity;
         this.elements = new Entry[this.capacity];
     }
 
