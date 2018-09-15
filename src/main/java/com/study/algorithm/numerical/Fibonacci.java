@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static com.study.algorithm.util.MatrixUtils.mul;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
@@ -25,7 +26,7 @@ public final class Fibonacci {
     }
 
     /**
-     * Slow variant. Save calculated fibonacci numbers to avoid recompute
+     * Slow variant. Added caching results for increasing performance.
      */
     public static BigInteger calcRecursiveWithoutDuplicates(int n) {
         BigInteger[] calculated = new BigInteger[1000000];
@@ -45,63 +46,52 @@ public final class Fibonacci {
      * Without recursive. Supports negative values.
      */
     public static BigInteger calcWithoutRecursive(int n) {
-        boolean isNegative = n < 0;
         if (Math.abs(n) < 2) {
-            return isNegative ? BigInteger.valueOf(n).negate() : BigInteger.valueOf(n);
+            return n < 0 ? BigInteger.valueOf(n).negate() : BigInteger.valueOf(n);
         }
-        int increment = isNegative ? -1 : 1;
 
         BigInteger prev = ZERO;
-        BigInteger cur = isNegative ? ONE.negate() : ONE;
+        BigInteger cur = ONE;
         BigInteger fib;
-        for (int i = isNegative ? -1 : 1; isNegative ? i > n : i < n; i += increment) {
-            fib = isNegative ? prev.subtract(cur) : prev.add(cur);
+        for (int i = 1; i < Math.abs(n); i++) {
+            fib = prev.add(cur);
             prev = cur;
             cur = fib;
         }
-        return isNegative ? cur.negate() : cur;
+        return (n < 0 && n % 2 == 0) ? cur.negate() : cur;
     }
 
     /**
      * Fast variant. Used multiplying and caching results.
      */
     public static BigInteger calcUsingMatrix(int n) {
-        if (Math.abs(n) < 2) {
+        boolean isNegative = n < 0;
+        n = Math.abs(n);
+        if (n < 2) {
             return BigInteger.valueOf(n);
         }
         Map<Integer, BigInteger[][]> calculated = new TreeMap<>();
         calculated.put(0, new BigInteger[][]{{ONE, ONE}, {ONE, ZERO}});
         calculated.put(1, new BigInteger[][]{{BigInteger.valueOf(2), ONE}, {ONE, ONE}});
-        return calculate(INIT, n, calculated)[0][1];
+        BigInteger result = calculate(INIT, n, calculated)[0][1];
+        return (isNegative && n % 2 == 0) ? result.negate() : result;
     }
 
     private static BigInteger[][] calculate(BigInteger[][] matrix, int n, Map<Integer, BigInteger[][]> calculated) {
-        if (calculated.get(n) != null) {
-            return calculated.get(n);
+        BigInteger[][] calc = calculated.get(n);
+        if (calc != null) {
+            return calc;
         }
         if (n == 2) {
-            return multiply(matrix, INIT);
+            return mul(matrix, INIT);
         } else if (n == 3) {
-            return multiply(multiply(matrix, INIT), INIT);
+            return mul(mul(matrix, INIT), INIT);
         }
         boolean isEven = n % 2 == 0;
         int m = n / 2;
-        BigInteger[][] calc = multiply(calculate(matrix, m, calculated), calculate(matrix, m + (isEven ? 0 : 1), calculated));
+        calc = mul(calculate(matrix, m, calculated), calculate(matrix, m + (isEven ? 0 : 1), calculated));
         calculated.put(n, calc);
         return calc;
-    }
-
-    private static BigInteger[][] multiply(BigInteger[][] a, BigInteger[][] b) {
-        BigInteger res[][] = new BigInteger[2][2];
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                res[i][j] = BigInteger.ZERO;
-                for (int k = 0; k < 2; k++) {
-                    res[i][j] = res[i][j].add(a[i][k].multiply(b[k][j]));
-                }
-            }
-        }
-        return res;
     }
 
 }

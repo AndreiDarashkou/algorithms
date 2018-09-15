@@ -17,7 +17,7 @@ public class PerformanceTest {
 
     @Before
     public void initArray() {
-        array = IntStream.rangeClosed(0, 100_000).boxed().collect(
+        array = IntStream.rangeClosed(0, 10_000).boxed().collect(
                 Collectors.collectingAndThen(Collectors.toList(), list -> {
                     Collections.shuffle(list);
                     return list;

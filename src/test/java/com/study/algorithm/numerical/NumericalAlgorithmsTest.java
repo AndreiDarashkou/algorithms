@@ -1,4 +1,4 @@
-package com.study.algorithm;
+package com.study.algorithm.numerical;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

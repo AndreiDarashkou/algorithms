@@ -1,5 +1,6 @@
-package com.study.algorithm
+package com.study.algorithm.numerical
 
+import com.study.algorithm.numerical.NumericalAlgorithms
 import spock.lang.Specification
 import spock.lang.Unroll
 

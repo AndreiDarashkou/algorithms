@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.study.algorithm.NumericalAlgorithms.ceilPowerOfTwo;
+import static com.study.algorithm.numerical.NumericalAlgorithms.ceilPowerOfTwo;
 
 public class ChainingHashTable<K, V> implements HashTable<K, V> {
 

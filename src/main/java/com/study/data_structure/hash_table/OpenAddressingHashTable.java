@@ -6,7 +6,7 @@ import com.study.data_structure.hash_table.probing.ProbingType;
 
 import java.util.Arrays;
 
-import static com.study.algorithm.NumericalAlgorithms.ceilPowerOfTwo;
+import static com.study.algorithm.numerical.NumericalAlgorithms.ceilPowerOfTwo;
 
 public class OpenAddressingHashTable<K, V> implements HashTable<K, V> {
 
