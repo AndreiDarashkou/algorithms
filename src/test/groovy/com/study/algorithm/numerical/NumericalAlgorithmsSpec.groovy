@@ -1,6 +1,5 @@
 package com.study.algorithm.numerical
 
-import com.study.algorithm.numerical.NumericalAlgorithms
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -43,5 +42,22 @@ class NumericalAlgorithmsSpec extends Specification {
         1000 || _
         1000 || _
     }
+
+
+    @Unroll
+    def "Test performExponentiation"() {
+        expect:
+        NumericalAlgorithms.performExponentiation(value, power) == result
+        where:
+        value | power || result
+        2     | 2     || 4
+        2     | 5     || 32
+        5     | 3     || 125
+        13    | 4     || 28561
+        6     | 7     || 279936
+        11    | 11    || 285311670611
+        45    | 8     || 16815125390625
+    }
+
 
 }

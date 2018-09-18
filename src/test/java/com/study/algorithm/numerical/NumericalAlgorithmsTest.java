@@ -40,6 +40,26 @@ class NumericalAlgorithmsTest {
     }
 
     @Test
+    @DisplayName("Test find primes for number 3")
+    void testFindPrimesFor3() {
+        List<Integer> result = NumericalAlgorithms.findPrimes(3);
+        assertEquals(3, result.size());
+        assertTrue(result.contains(1));
+        assertTrue(result.contains(2));
+        assertTrue(result.contains(3));
+    }
+
+    @Test
+    @DisplayName("Test find primes for number 3")
+    void testFindPrimesFor9() {
+        List<Integer> result = NumericalAlgorithms.findPrimes(11);
+        assertEquals(6, result.size());
+        assertTrue(result.contains(5));
+        assertTrue(result.contains(7));
+        assertTrue(result.contains(11));
+    }
+
+    @Test
     @DisplayName("Test find primes for number 22")
     void testFindPrimesFor22() {
         List<Integer> result = NumericalAlgorithms.findPrimes(22);
@@ -56,7 +76,7 @@ class NumericalAlgorithmsTest {
     @DisplayName("Test find primes for number 567")
     void testFindPrimesFor567() {
         List<Integer> result = NumericalAlgorithms.findPrimes(567);
-        assertEquals(105, result.size());
+        assertEquals(106, result.size());
         assertTrue(result.contains(193));
         assertTrue(result.contains(241));
         assertTrue(result.contains(337));
@@ -70,7 +90,7 @@ class NumericalAlgorithmsTest {
     @DisplayName("Test find primes for number 78765")
     void testFindPrimesFor78765() {
         List<Integer> result = NumericalAlgorithms.findPrimes(78765);
-        assertEquals(7725, result.size());
+        assertEquals(7726, result.size());
         assertTrue(result.contains(2731));
         assertTrue(result.contains(727));
         assertTrue(result.contains(1999));
@@ -129,31 +149,6 @@ class NumericalAlgorithmsTest {
     @DisplayName("Find greatest common divisor for numbers 2003 and 1999")
     void findGreatestCommonDivisorsFor2003And1005() {
         assertEquals(1, NumericalAlgorithms.findGreatestCommonDivisor(2003, 1999));
-    }
-
-    @Test
-    @DisplayName("Raise the number 5 to the 5th power")
-    void performExponentiationFor5To5() {
-        assertEquals(3125, NumericalAlgorithms.performExponentiation(5, 5));
-    }
-
-
-    @Test
-    @DisplayName("Raise the number 13 to the 4th power")
-    void performExponentiationFor13To345() {
-        assertEquals(28561, NumericalAlgorithms.performExponentiation(13, 4));
-    }
-
-    @Test
-    @DisplayName("Raise the number 3 to the 13th power")
-    void performExponentiationFor3To13() {
-        assertEquals(1594323, NumericalAlgorithms.performExponentiation(3, 13));
-    }
-
-    @Test
-    @DisplayName("Raise the number 3 to the 31th power")
-    void performExponentiationFor3To31() {
-        assertEquals(617673396283947L, NumericalAlgorithms.performExponentiation(3, 31));
     }
 
 }

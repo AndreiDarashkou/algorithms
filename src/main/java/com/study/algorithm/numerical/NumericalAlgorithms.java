@@ -1,5 +1,6 @@
 package com.study.algorithm.numerical;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +64,8 @@ public final class NumericalAlgorithms {
         }
         int nextPrime = 3;
         int stopAt = (int) Math.sqrt(number);
-        while (nextPrime < stopAt) {
-            for (int i = nextPrime * nextPrime; i < number; i += nextPrime) {
+        while (nextPrime <= stopAt) {
+            for (int i = nextPrime * nextPrime; i <= number; i += nextPrime) {
                 composite[i] = true;
             }
             nextPrime += 2;
@@ -74,7 +75,7 @@ public final class NumericalAlgorithms {
         }
 
         List<Integer> primes = new ArrayList<>();
-        for (int i = 1; i < number; i++) {
+        for (int i = 1; i <= number; i++) {
             if (!composite[i]) {
                 primes.add(i);
             }
@@ -115,17 +116,17 @@ public final class NumericalAlgorithms {
         return firstNumber;
     }
 
-    public static long performExponentiation(int value, int power) {
+    public static BigInteger performExponentiation(int value, int power) {
         if (power == 0) {
-            return 1;
+            return BigInteger.ONE;
         }
         if (power == 1) {
-            return value;
+            return BigInteger.valueOf(value);
         }
-        long result = value;
+        BigInteger result = BigInteger.valueOf(value);
         int pow = 2;
         while (true) {
-            result = result * result;
+            result = result.multiply(result);
             if (pow * 2 > power) {
                 break;
             }
@@ -133,7 +134,7 @@ public final class NumericalAlgorithms {
         }
         pow = power - pow;
 
-        return result * performExponentiation(value, pow);
+        return result.multiply(performExponentiation(value, pow));
     }
 
     public static int floorPowerOfTwo(int x) {
