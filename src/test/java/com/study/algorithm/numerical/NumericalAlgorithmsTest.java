@@ -76,7 +76,7 @@ class NumericalAlgorithmsTest {
     @DisplayName("Test find primes for number 567")
     void testFindPrimesFor567() {
         List<Integer> result = NumericalAlgorithms.findPrimes(567);
-        assertEquals(106, result.size());
+        assertEquals(104, result.size());
         assertTrue(result.contains(193));
         assertTrue(result.contains(241));
         assertTrue(result.contains(337));
@@ -90,7 +90,7 @@ class NumericalAlgorithmsTest {
     @DisplayName("Test find primes for number 78765")
     void testFindPrimesFor78765() {
         List<Integer> result = NumericalAlgorithms.findPrimes(78765);
-        assertEquals(7726, result.size());
+        assertEquals(7725, result.size());
         assertTrue(result.contains(2731));
         assertTrue(result.contains(727));
         assertTrue(result.contains(1999));
