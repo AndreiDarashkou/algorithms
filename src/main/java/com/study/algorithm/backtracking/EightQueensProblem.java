@@ -33,7 +33,7 @@ public final class EightQueensProblem {
         return false;
     }
 
-    public static boolean isInvalid(boolean[][] chessBoard) {
+    static boolean isInvalid(boolean[][] chessBoard) {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if (chessBoard[row][col]
