@@ -7,8 +7,8 @@ import java.util.List;
 
 final class KnightsTour {
 
-    private static final int[] deltaX = new int[]{1, 2, 2, 1, -1, -2, -2, -1};
-    private static final int[] deltaY = new int[]{2, 1, -1, -2, -2, -1, 1, 2};
+    private static final int[] DELTA_X = new int[]{1, 2, 2, 1, -1, -2, -2, -1};
+    private static final int[] DELTA_Y = new int[]{2, 1, -1, -2, -2, -1, 1, 2};
 
     private final int[][] board;
     private final Comparator<Point> comparator;
@@ -49,8 +49,8 @@ final class KnightsTour {
     private static List<Point> getPoints(int[][] board, Point currPosition) {
         List<Point> availablePlaces = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
-            int x = currPosition.x + deltaX[i];
-            int y = currPosition.y + deltaY[i];
+            int x = currPosition.x + DELTA_X[i];
+            int y = currPosition.y + DELTA_Y[i];
             if (x >= 0 && x < board.length && y >= 0 && y < board.length && board[x][y] == 0) {
                 availablePlaces.add(new Point(x, y));
             }

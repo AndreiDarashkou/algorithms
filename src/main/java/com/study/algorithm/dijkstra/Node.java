@@ -1,23 +1,36 @@
 package com.study.algorithm.dijkstra;
 
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-@Getter
-@Setter
-public class Node {
-    private final int id;
+public class Node<T> {
+    private final T value;
     int lowestCost;
     boolean isVisited = false;
-    Node parent;
-    Map<Node, Integer> neighborMap = new HashMap<>();
+    Node<T> parent;
+    Map<Node<T>, Integer> connections = new HashMap<>();
 
-    Node(int id) {
-        this.id = id;
+    Node(T value) {
+        this.value = value;
     }
 
+    public T getValue() {
+        return value;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node<?> node = (Node<?>) o;
+        return Objects.equals(value, node.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
 }
