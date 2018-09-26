@@ -26,7 +26,7 @@ public class SlidingPuzzle {
 
     public static void main(String[] args) {
         int test[][] = new int[][]{{2, 7, 3}, {5, 8, 0}, {1, 6, 4}};
-        SlidingPuzzle puzzle = new SlidingPuzzle(generate(7));
+        SlidingPuzzle puzzle = new SlidingPuzzle(generate(5));
         puzzle.printPuzzle();
         puzzle.solve();
     }
@@ -48,53 +48,40 @@ public class SlidingPuzzle {
     public void solve() {
         int element = 1;
         int max = size * size;
-        int place = element;
-        int necessaryElement = element;
-        boolean isLast = false;
 
         while (element <= max - (size * 2)) {
-            place = element;
-            necessaryElement = element;
             if (element % size == size - 1) { //если предпоследний
-                necessaryElement++;
-            } else if (element % size == 0) { //если последний
-                necessaryElement--;
-                place = necessaryElement + size;
-                isLast = true;
-            }
-            if (isPlaced(necessaryElement, place)) {
-                Point pos = correctPosition(place);//freeze place
-                grid[pos.x][pos.y] = 1;
+                placeLastTwoInRow(element);
+                element += 2;
+            } else {
+                placeElement(element, element);
                 element++;
-                continue;
-            }
-
-            moveZeroToNext(necessaryElement);
-            Point actual = actualPlace(necessaryElement);
-            Point correct = correctPosition(place);
-            move(actual, correct);
-            if (isLast) {
-                if (necessaryElement % size == 1) {
-                    necessaryElement = necessaryElement - 2;
-                    element--;
-                }
-                actual = actualPlace(necessaryElement);
-                grid[actual.x][actual.y] = 1;
-                moveZeroToNext(necessaryElement + 1);
-                swap(getZero(), actual);
-                grid[actual.x][actual.y] = 0;
-                Point elementPlace = actualPlace(necessaryElement);
-                grid[elementPlace.x][elementPlace.y] = 1;
-                Point last = actualPlace(element);
-                grid[last.x][last.y] = 1;
-                element++;
-                isLast = false;
             }
         }
         System.out.println("element: " + element);
-        System.out.println("place: " + place);
-        System.out.println("necessaryElement: " + necessaryElement);
         print(grid);
+    }
+
+    private void placeElement(int element, int position) {
+        moveZeroToNext(element);
+        Point actual = actualPlace(element);
+        Point correct = correctPosition(position);
+        move(actual, correct);
+        grid[correct.x][correct.y] = 1;
+    }
+
+    private void placeLastTwoInRow(int element) {
+        placeElement(element + 1, element);
+        placeElement(element, element + size);
+        moveZeroToNext(element + 1);
+        Point underPreLastInRowPosition = correctPosition(element + size);
+        swap(getZero(),underPreLastInRowPosition);
+        grid[underPreLastInRowPosition.x][underPreLastInRowPosition.y] = 0;
+
+        Point preLastInRowPosition = correctPosition(element);
+        grid[preLastInRowPosition.x][preLastInRowPosition.y] = 1;
+        Point lastInRowPosition = correctPosition(element + 1);
+        grid[lastInRowPosition.x][lastInRowPosition.y] = 1;
     }
 
     private void moveZeroToNext(int nextToPlace) {
