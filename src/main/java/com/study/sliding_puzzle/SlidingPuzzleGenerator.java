@@ -8,14 +8,11 @@ import java.util.stream.IntStream;
 
 public final class SlidingPuzzleGenerator {
 
-    private final static int MIN_SIZE = 3;
-    private final static int MAX_SIZE = 10;
-
-    private SlidingPuzzleGenerator(){
+    private SlidingPuzzleGenerator() {
     }
 
     public static void main(String[] args) {
-        SlidingPuzzle puzzle = new SlidingPuzzle(generate(4));
+        SlidingPuzzle puzzle = new SlidingPuzzle(generate(7, 3));
         print(puzzle.getPuzzle());
         List<Integer> way = puzzle.solve();
         System.out.println(way.size());
@@ -24,19 +21,18 @@ public final class SlidingPuzzleGenerator {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static int[][] generate(int size) {
-        size = Math.max(MIN_SIZE, Math.min(MAX_SIZE, size));
-        int[][] puzzle = new int[size][size];
-        LinkedList<Integer> values = IntStream.range(1, size * size).boxed().collect(Collectors.toCollection(LinkedList::new));
+    public static int[][] generate(int width, int height) {
+        int[][] puzzle = new int[height][width];
+        LinkedList<Integer> values = IntStream.range(1, width * height).boxed().collect(Collectors.toCollection(LinkedList::new));
         values.add(0);
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
                 puzzle[row][col] = values.poll();
             }
         }
         for (int i = 0; i < 100; i++) {
-            Point zero = actualPlace(0, puzzle, size);
-            swap(zero, getRandom(zero, size), puzzle);
+            Point zero = actualPlace(0, puzzle, width, height);
+            swap(zero, getRandom(zero, width, height), puzzle);
         }
         return puzzle;
     }
@@ -47,17 +43,17 @@ public final class SlidingPuzzleGenerator {
         puzzle[to.x][to.y] = temp;
     }
 
-    private static Point getRandom(Point current, int size) {
+    private static Point getRandom(Point current, int width, int height) {
         int row = current.x;
         int col = current.y;
         List<Point> potential = new ArrayList<>();
-        if (row + 1 < size) {
+        if (row + 1 < height) {
             potential.add(new Point(row + 1, col));
         }
         if (row - 1 >= 0) {
             potential.add(new Point(row - 1, col));
         }
-        if (col + 1 < size) {
+        if (col + 1 < width) {
             potential.add(new Point(row, col + 1));
         }
         if (col - 1 >= 0) {
@@ -67,9 +63,9 @@ public final class SlidingPuzzleGenerator {
         return potential.get(0);
     }
 
-    private static Point actualPlace(int tile, int[][] puzzle, int size) {
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+    private static Point actualPlace(int tile, int[][] puzzle, int width, int height) {
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
                 if (puzzle[row][col] == tile) {
                     return new Point(row, col);
                 }
@@ -84,7 +80,7 @@ public final class SlidingPuzzleGenerator {
         builder.append(delimiter);
         for (int[] row : puzzle) {
             builder.append("\n|");
-            for (int col = 0; col < puzzle.length; col++) {
+            for (int col = 0; col < puzzle[0].length; col++) {
                 builder.append(row[col]);
                 if (row[col] < 10) {
                     builder.append(' ');

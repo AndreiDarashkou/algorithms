@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.study.algorithm.dijkstra.DijkstraAlgorithm.findLowestCostWay;
+import static com.study.sliding_puzzle.SlidingPuzzleGenerator.print;
 
 public class SlidingPuzzle {
 
@@ -16,20 +17,22 @@ public class SlidingPuzzle {
 
     private final int[][] puzzle;
     private final int[][] grid;
-    private final int size;
+    private final int height;
+    private final int width;
 
     public SlidingPuzzle(int[][] puzzle) {
         this.puzzle = puzzle;
-        this.size = puzzle.length;
-        this.grid = new int[puzzle.length][puzzle[0].length];
+        this.height = puzzle.length;
+        this.width = puzzle[0].length;
+        this.grid = new int[height][width];
     }
 
     public List<Integer> solve() {
         int element = 1;
-        int max = size * (size - 2);
+        int max = width * (height - 2);
 
         while (element <= max) {
-            if (element % size == size - 1) {
+            if (element % width == width - 1) {
                 placeLastTwoInRow(element);
                 element += 2;
             } else {
@@ -43,16 +46,16 @@ public class SlidingPuzzle {
     }
 
     private void placeLastTwoRows(int element) {
-        int max = size * (size - 1);
+        int max = width * (height - 1) - 1;
         while (true) {
-            if (element == max - 1) {
+            if (element == max) {
                 placeLastThreeElements(element);
                 break;
             }
-            placeElement(element, size * size);
-            grid[size - 1][size - 1] = 0;
+            placeElement(element, width * height);
+            grid[height - 1][width - 1] = 0;
 
-            int underElement = element + size;
+            int underElement = element + width;
             placeElement(underElement, element);
             placeElement(element, element + 1);
             Point underElementPosition = correctPosition(underElement);
@@ -67,17 +70,18 @@ public class SlidingPuzzle {
     }
 
     private void placeLastThreeElements(int element) {
-        int maxIndex = size - 1;
+        int maxXIndex = height - 1;
+        int maxYIndex = width - 1;
         int attempts = 0;
-        while (!(puzzle[maxIndex][maxIndex] == 0 && puzzle[maxIndex][maxIndex - 1] == size * size - 1
-                && puzzle[maxIndex - 1][maxIndex - 1] == element)) {
+        while (!(puzzle[maxXIndex][maxYIndex] == 0 && puzzle[maxXIndex][maxYIndex - 1] == height * width - 1
+                && puzzle[maxXIndex - 1][maxYIndex - 1] == element)) {
             Point zero = getZero();
             int place = element + 1; //right
-            if (zero.x == maxIndex && zero.y == maxIndex) { //left
-                place = element + size;
-            } else if (zero.x == maxIndex - 1 && zero.y == maxIndex) {//down
-                place = element + size + 1;
-            } else if (zero.x == maxIndex && zero.y == maxIndex - 1) {//up
+            if (zero.x == maxXIndex && zero.y == maxYIndex) { //left
+                place = element + width;
+            } else if (zero.x == maxXIndex - 1 && zero.y == maxYIndex) {//down
+                place = element + width + 1;
+            } else if (zero.x == maxXIndex && zero.y == maxYIndex - 1) {//up
                 place = element;  //up
             }
             swap(zero, correctPosition(place));
@@ -96,17 +100,17 @@ public class SlidingPuzzle {
     }
 
     private void placeLastTwoInRow(int element) {
-        placeElement(element, element + size * 2);
-        Point pos = correctPosition(element + size * 2);
+        placeElement(element, element + width * 2);
+        Point pos = correctPosition(element + width * 2);
         grid[pos.x][pos.y] = 0;
 
         placeElement(element + 1, element);
-        placeElement(element, element + size);
+        placeElement(element, element + width);
         moveZeroToNext(element + 1);
 
         Point preLastInRowPosition = correctPosition(element);
         swap(getZero(), preLastInRowPosition);
-        Point underPreLastInRowPosition = correctPosition(element + size);
+        Point underPreLastInRowPosition = correctPosition(element + width);
         swap(getZero(), underPreLastInRowPosition);
 
         grid[preLastInRowPosition.x][preLastInRowPosition.y] = 1;
@@ -154,6 +158,7 @@ public class SlidingPuzzle {
         int temp = puzzle[from.x][from.y];
         puzzle[from.x][from.y] = puzzle[to.x][to.y];
         puzzle[to.x][to.y] = temp;
+        print(puzzle);
     }
 
     private Point fixPosition(Point point) {
@@ -165,22 +170,22 @@ public class SlidingPuzzle {
         if (y - 1 >= 0 && grid[x][y - 1] == 0) {//left
             return new Point(x, y - 1);
         }
-        if (y + 1 < size && grid[x][y + 1] == 0) {//right
+        if (y + 1 < width && grid[x][y + 1] == 0) {//right
             return new Point(x, y + 1);
         }
-        if (x + 1 < size && grid[x + 1][y] == 0) {//bottom
+        if (x + 1 < height && grid[x + 1][y] == 0) {//bottom
             return new Point(x + 1, y);
         }
         return point;
     }
 
     private Point correctPosition(int tile) {
-        return new Point((tile - 1) / size, (tile - 1) % size);
+        return new Point((tile - 1) / width, (tile - 1) % width);
     }
 
     private Point actualPlace(int tile) {
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
                 if (puzzle[row][col] == tile) {
                     return new Point(row, col);
                 }
