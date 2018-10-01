@@ -1,4 +1,4 @@
-package com.study.algorithm.dijkstra;
+package com.study.algorithm.finding_path;
 
 
 import java.util.HashMap;

@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.study.algorithm.dijkstra.DijkstraAlgorithm.findLowestCostWay;
+import static com.study.algorithm.finding_path.DijkstraAlgorithm.findLowestCostWay;
 import static com.study.sliding_puzzle.SlidingPuzzleGenerator.print;
 
 public class SlidingPuzzle {
@@ -86,7 +86,7 @@ public class SlidingPuzzle {
             }
             swap(zero, correctPosition(place));
             if (++attempts > 10) {
-                throw new IllegalArgumentException("invalid puzzle");
+                moveHistory = null;
             }
         }
     }
