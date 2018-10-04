@@ -1,11 +1,11 @@
-package com.study.sliding_puzzle;
+package com.study.puzzle.sliding;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.study.algorithm.finding_path.DijkstraAlgorithm.findLowestCostWay;
-import static com.study.sliding_puzzle.SlidingPuzzleGenerator.print;
+import static com.study.puzzle.sliding.SlidingPuzzleGenerator.print;
 
 public class SlidingPuzzle {
 

@@ -1,4 +1,4 @@
-package com.study.sliding_puzzle;
+package com.study.puzzle.sliding;
 
 import java.awt.*;
 import java.util.*;

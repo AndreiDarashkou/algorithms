@@ -1,4 +1,4 @@
-package com.study.puzzle;
+package com.study.puzzle.sudoku;
 
 import java.awt.*;
 import java.util.*;
@@ -9,31 +9,35 @@ import static java.util.stream.Collectors.toMap;
 public final class SudokuSolver {
 
     private int[][] grid;
+    private int[][] result;
     private int placed = 0;
+    private int solutions = 0;
     private Map<Point, List<Integer>> available = new LinkedHashMap<>();
 
     public SudokuSolver(int[][] grid) {
+        if (!SudokuValidator.isCorrect(grid)) {
+            throw new IllegalArgumentException("Invalid puzzle");
+        }
         this.grid = grid;
-        updateAvailableMap();
     }
 
     public int[][] solve() {
-        System.out.println(isCorrect());
-        System.out.println(solve(0, 0, 0));
-        return grid;
+        solve(0, 0, grid[0][0]);
+        if (solutions != 1) {
+            throw new IllegalArgumentException("Puzzle has: " + solutions + " solutions");
+        }
+        return result;
     }
 
-    private int count = 0;
+    private boolean solve(int x, int y, int number) {
+        setNumber(x, y, number);
 
-    private boolean solve(int x, int y, int value) {
-        grid[x][y] = value;
-
-        updateAvailableMap();
-        System.out.println(placed + " attempts: " + ++count);
         if (placed == 81) {
-            return true;
+            solutions++;
+            copyResult();
+            setNumber(x, y, 0);
+            return false; //we don't return true to find all solutions
         }
-
         Map.Entry<Point, List<Integer>> entry = available.entrySet().iterator().next();
         Point p = entry.getKey();
         List<Integer> numbers = entry.getValue();
@@ -42,63 +46,20 @@ public final class SudokuSolver {
                 return true;
             }
         }
-
-        grid[x][y] = 0;
-        updateAvailableMap();
+        setNumber(x, y, 0);
         return false;
     }
 
-    private boolean isCorrect() {
-        for (int row = 0; row < 9; row++) {
-            if (!checkLine(grid[row].clone())) {
-                return false;
-            }
-        }
-        for (int row = 0; row < 9; row++) {
-            int column[] = new int[9];
-            int index = 0;
-            for (int col = 0; col < 9; col++) {
-                column[index++] = grid[col][row];
-            }
-            if (!checkLine(column)) {
-                return false;
-            }
-        }
-        for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
-                if (!checkSquare(row, col)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    private void setNumber(int x, int y, int number) {
+        grid[x][y] = number;
+        updateAvailableMap();
     }
 
-    private boolean checkSquare(int row, int col) {
-        int sqRow = row / 3 * 3;
-        int sqCol = col / 3 * 3;
-        int square[] = new int[9];
-        int index = 0;
-        for (int i = sqRow; i < sqRow + 3; i++) {
-            for (int j = sqCol; j < sqCol + 3; j++) {
-                square[index++] = grid[i][j];
-            }
+    private void copyResult() {
+        result = new int[9][9];
+        for (int row = 0; row < 9; row++) {
+            System.arraycopy(grid[row], 0, result[row], 0, 9);
         }
-        return checkLine(square);
-    }
-
-
-    private boolean checkLine(int[] clone) {
-        Arrays.sort(clone);
-        for (int i = 0; i < 8; i++) {
-            if (clone[i] == 0) {
-                continue;
-            }
-            if (clone[i] == clone[i + 1]) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private void updateAvailableMap() {
@@ -123,8 +84,7 @@ public final class SudokuSolver {
         List<Integer> numbers = new ArrayList<>();
         if (grid[row][col] == 0) {
             for (int num = 1; num < 10; num++) {
-                if (lineNotContain(grid[row], num) && columnNotContain(col, num) &&
-                        squareNotContain(row, col, num)) {
+                if (lineNotContain(grid[row], num) && columnNotContain(col, num) && squareNotContain(row, col, num)) {
                     numbers.add(num);
                 }
             }
@@ -165,24 +125,24 @@ public final class SudokuSolver {
 
     public static void main(String[] args) {
         int[][] puzzle = {
-                {7, 0, 1, 0, 0, 0, 0, 2, 0},
-                {0, 0, 6, 0, 0, 0, 0, 0, 4},
-                {0, 0, 0, 7, 6, 0, 8, 0, 0},
-                {0, 0, 0, 9, 0, 0, 0, 6, 0},
-                {1, 9, 0, 0, 0, 0, 0, 3, 0},
-                {0, 3, 0, 0, 1, 7, 0, 0, 2},
-                {0, 0, 0, 0, 0, 0, 9, 0, 3},
-                {0, 8, 0, 0, 2, 0, 5, 0, 0},
-                {0, 0, 5, 0, 0, 4, 0, 0, 0}};
+                {4, 0, 5, 0, 1, 0, 7, 0, 8},
+                {0, 0, 7, 0, 0, 5, 0, 0, 0},
+                {0, 3, 0, 7, 0, 0, 0, 5, 0},
+                {0, 0, 3, 0, 0, 0, 0, 0, 5},
+                {0, 4, 0, 2, 0, 8, 0, 6, 0},
+                {5, 0, 0, 0, 0, 0, 1, 0, 0},
+                {0, 7, 0, 0, 2, 3, 0, 1, 0},
+                {0, 0, 0, 4, 0, 0, 2, 0, 0},
+                {9, 0, 6, 0, 7, 0, 4, 0, 3}};
         int[][] result = new SudokuSolver(puzzle).solve();
         print(result);
     }
 
     private static void print(int[][] result) {
-        for (int i = 0; i < 9; i++) {
+        for (int[] row : result) {
             System.out.println();
-            for (int j = 0; j < 9; j++) {
-                System.out.print(result[i][j] + " ");
+            for (int num : row) {
+                System.out.print(num + " ");
             }
         }
         System.out.println();
