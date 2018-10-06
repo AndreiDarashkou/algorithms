@@ -3,6 +3,7 @@ package com.study.puzzle.sudoku;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -31,7 +32,6 @@ public final class SudokuSolver {
 
     private boolean solve(int x, int y, int number) {
         setNumber(x, y, number);
-
         if (placed == 81) {
             solutions++;
             copyResult();
@@ -74,10 +74,38 @@ public final class SudokuSolver {
                 }
             }
         }
+        if (available.size() > 0) {
+            checkAvailability((point, e) -> e.getKey().x == point.x && e.getKey().y != point.y);
+            checkAvailability((point, e) -> e.getKey().y == point.y && e.getKey().x != point.x);
+            checkAvailability((p, e) -> e.getKey().x >= p.x / 3 * 3 && e.getKey().x < (p.x / 3 * 3 + 3)
+                    && e.getKey().y >= p.y / 3 * 3 && e.getKey().y < (p.y / 3 * 3 + 3));
+        }
         available = available.entrySet()
                 .stream()
                 .sorted(Comparator.comparingInt(o -> o.getValue().size()))
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+    }
+
+    private void checkAvailability(BiPredicate<Point, Map.Entry<Point, List<Integer>>> condition) {
+        for (Map.Entry<Point, List<Integer>> entry : available.entrySet()) {
+            if (entry.getValue().size() < 2) {
+                continue;
+            }
+            Point point = entry.getKey();
+            List<Integer> numbers = entry.getValue();
+            Set<Integer> numbersInRow = new HashSet<>();
+            for (Map.Entry<Point, List<Integer>> e : available.entrySet()) {
+                if (condition.test(point, e)) {
+                    numbersInRow.addAll(e.getValue());
+                }
+            }
+            for (int num : numbers) {
+                if (!numbersInRow.contains(num)) {
+                    available.put(point, Collections.singletonList(num));
+                    return;
+                }
+            }
+        }
     }
 
     private List<Integer> getAvailableNumbers(int row, int col) {
@@ -121,21 +149,6 @@ public final class SudokuSolver {
             }
         }
         return true;
-    }
-
-    public static void main(String[] args) {
-        int[][] puzzle = {
-                {4, 0, 5, 0, 1, 0, 7, 0, 8},
-                {0, 0, 7, 0, 0, 5, 0, 0, 0},
-                {0, 3, 0, 7, 0, 0, 0, 5, 0},
-                {0, 0, 3, 0, 0, 0, 0, 0, 5},
-                {0, 4, 0, 2, 0, 8, 0, 6, 0},
-                {5, 0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 7, 0, 0, 2, 3, 0, 1, 0},
-                {0, 0, 0, 4, 0, 0, 2, 0, 0},
-                {9, 0, 6, 0, 7, 0, 4, 0, 3}};
-        int[][] result = new SudokuSolver(puzzle).solve();
-        print(result);
     }
 
     private static void print(int[][] result) {
