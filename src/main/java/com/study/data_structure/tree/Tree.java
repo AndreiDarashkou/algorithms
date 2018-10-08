@@ -27,7 +27,7 @@ public class Tree<T extends Comparable<T>> {
             return false;
         }
         if (value.equals(root.value)) {
-            root = removeRoot(root);
+            root = removeRoot();
             return true;
         }
         return root.remove(value, null);
@@ -49,14 +49,19 @@ public class Tree<T extends Comparable<T>> {
         }
     }
 
-    private Node removeRoot(Node node) {
-        Node rightmostSubtree = findRightmostSubtree(node.left);
-        Node rightmost = rightmostSubtree.right;
-        Node leaf = rightmost.left;
-        rightmost.left = node.left;
-        rightmost.right = node.right;
-        rightmostSubtree.right = leaf;
-        return rightmost;
+    private Node removeRoot() {
+        if (root.left == null && root.right == null) {
+            return null;
+        } else if (root.left != null) {
+            Node rightmostSubtree = findRightmostSubtree(root.left);
+            Node rightmost = rightmostSubtree.right;
+            Node leaf = rightmost.left;
+            rightmost.left = root.left;
+            rightmost.right = root.right;
+            rightmostSubtree.right = leaf;
+            return rightmost;
+        }
+        return root.right;
     }
 
     private Node findRightmostSubtree(Node node) {
@@ -142,17 +147,9 @@ public class Tree<T extends Comparable<T>> {
                 return value;
             }
             if (comp > 0) {
-                if (right == null) {
-                    return null;
-                } else {
-                    return right.find(value);
-                }
+                return right == null ? null : right.find(value);
             } else {
-                if (left == null) {
-                    return null;
-                } else {
-                    return left.find(value);
-                }
+                return left == null ? null : left.find(value);
             }
         }
 

@@ -13,8 +13,9 @@ public class AVLTree<T extends Comparable<T>> {
             root = new Node(value);
             return;
         }
-        root.add(value);
-        rebalance();
+        if (root.add(value)) {
+            rebalance();
+        }
     }
 
     public T find(T value) {
@@ -29,7 +30,8 @@ public class AVLTree<T extends Comparable<T>> {
             return false;
         }
         if (value.equals(root.value)) {
-            root = removeRoot(root);
+            root = removeRoot();
+            root.updateChildrenHeight();
             return true;
         }
         boolean isRemoved = root.remove(value, null);
@@ -58,91 +60,95 @@ public class AVLTree<T extends Comparable<T>> {
     }
 
     private void rebalance() {
+        root.updateChildrenHeight();
         Node rotate = findDisbalance();
         if (rotate == null) {
             return;
         }
+        Node parent = findParent(rotate);
         int leftH = rotate.left == null ? 0 : rotate.left.height;
         int rightH = rotate.right == null ? 0 : rotate.right.height;
         if (leftH > rightH) {
             int leftLeftH = rotate.left.left == null ? 0 : rotate.left.left.height;
             int leftRightH = rotate.left.right == null ? 0 : rotate.left.right.height;
             if (leftLeftH > leftRightH) { //right rotate
-                rightRotateNode(rotate);
+                rightRotateNode(rotate, parent);
             } else { //left right rotate
                 rotate.left = leftRotate(rotate.left);
-                rightRotateNode(rotate);
+                rightRotateNode(rotate, parent);
             }
         } else {
             int rightLeftH = rotate.right.left == null ? 0 : rotate.right.left.height;
             int rightRightH = rotate.right.right == null ? 0 : rotate.right.right.height;
             if (rightRightH > rightLeftH) {//left rotate
-                leftRotateNode(rotate);
+                leftRotateNode(rotate, parent);
             } else { //right left rotate
                 rotate.right = rightRotate(rotate.right);
-                leftRotateNode(rotate);
+                leftRotateNode(rotate, parent);
             }
         }
-        rotate.parent.updateChildrenHeight();
+        root.updateChildrenHeight();
     }
 
-    private void rightRotateNode(Node rotate) {
-        if (rotate.parent == null) {
+    private Node findParent(Node node) {
+        Queue<Node> children = new ArrayDeque<>();
+        children.add(root);
+        while (!children.isEmpty()) {
+            Node next = children.poll();
+            if (next.left == node || next.right == node) {
+                return next;
+            }
+            if (next.left != null)
+                children.add(next.left);
+            if (next.right != null)
+                children.add(next.right);
+        }
+        return null;
+    }
+
+    private void rightRotateNode(Node rotate, Node parent) {
+        if (parent == null) {
             root = rightRotate(rotate);
         } else {
-            rotate.parent.left = rightRotate(rotate);
+            parent.left = rightRotate(rotate);
         }
     }
 
-    private void leftRotateNode(Node rotate) {
-        if (rotate.parent == null) {
+    private void leftRotateNode(Node rotate, Node parent) {
+        if (parent == null) {
             root = leftRotate(rotate);
         } else {
-            rotate.parent.right = leftRotate(rotate);
+            parent.right = leftRotate(rotate);
         }
     }
 
     Node rightRotate(Node root) {
-        if (root.left == null) {
-            return root;
-        }
         Node newRoot = root.left;
         root.left = newRoot.right;
-        if (newRoot.right != null) {
-            newRoot.right.parent = root;
-        }
         newRoot.right = root;
-        newRoot.parent = root.parent;
-        root.parent = newRoot;
-
         return newRoot;
     }
 
     Node leftRotate(Node root) {
-        if (root.right == null) {
-            return root;
-        }
         Node newRoot = root.right;
         root.right = newRoot.left;
-        if (newRoot.left != null) {
-            newRoot.left.parent = root;
-        }
         newRoot.left = root;
-        newRoot.parent = root.parent;
-        root.parent = newRoot;
-
         return newRoot;
     }
 
-    private Node removeRoot(Node node) {
-        Node rightmostSubtree = findRightmostSubtree(node.left);
-        Node rightmost = rightmostSubtree.right;
-        Node leaf = rightmost.left;
-        rightmost.left = node.left;
-        rightmost.right = node.right;
-        rightmost.parent = null;
-        rightmostSubtree.right = leaf;
-        return rightmost;
+    private Node removeRoot() {
+        if (root.left == null && root.right == null) {
+            return null;
+        } else if (root.left != null) {
+            Node rightmostSubtree = findRightmostSubtree(root.left);
+            Node rightmost = rightmostSubtree.right;
+            Node leaf = rightmost.left;
+            rightmost.left = root.left;
+            rightmost.right = root.right;
+            rightmostSubtree.right = leaf;
+            return rightmost;
+        }
+        return root.right;
     }
 
     private Node findRightmostSubtree(Node node) {
@@ -196,7 +202,6 @@ public class AVLTree<T extends Comparable<T>> {
 
         Node<T> left;
         Node<T> right;
-        Node<T> parent;
         T value;
         int height = 0;
 
@@ -204,48 +209,29 @@ public class AVLTree<T extends Comparable<T>> {
             this.value = value;
         }
 
-        void add(T value) {
+        boolean add(T value) {
             int comp = value.compareTo(this.value);
             if (comp == 0) {
-                return;
+                return false;
             }
-            if (comp > 0) {
-                addRight(value);
-            } else {
-                addLeft(value);
-            }
+            return comp > 0 ? addRight(value) : addLeft(value);
         }
 
-        private void addLeft(T value) {
+        private boolean addLeft(T value) {
             if (left == null) {
                 left = new Node(value);
-                left.parent = this;
-                if (right == null) {
-                    updateHeight();
-                }
+                return right == null;
             } else {
-                left.add(value);
+                return left.add(value);
             }
         }
 
-        private void addRight(T value) {
+        private boolean addRight(T value) {
             if (right == null) {
                 right = new Node(value);
-                right.parent = this;
-                if (left == null) {
-                    updateHeight();
-                }
+                return left == null;
             } else {
-                right.add(value);
-            }
-        }
-
-        void updateHeight() {
-            int leftH = left == null ? 0 : left.height;
-            int rightH = right == null ? 0 : right.height;
-            height = Math.max(leftH, rightH) + 1;
-            if (parent != null) {
-                parent.updateHeight();
+                return right.add(value);
             }
         }
 
@@ -260,10 +246,16 @@ public class AVLTree<T extends Comparable<T>> {
             if (node.right != null) {
                 postorderTraverse(node.right);
             }
-            if (node.left == null && node.right == null) {
-                node.height = 0;
+            node.updateHeight();
+        }
+
+        private void updateHeight() {
+            if (left == null && right == null) {
+                height = 0;
             } else {
-                node.updateHeight();
+                int leftH = left == null ? 0 : left.height;
+                int rightH = right == null ? 0 : right.height;
+                height = Math.max(leftH, rightH) + 1;
             }
         }
 
@@ -279,14 +271,8 @@ public class AVLTree<T extends Comparable<T>> {
                     left.remove(this.value, this);
                 } else if (parent.left == this) {
                     parent.left = left != null ? left : right;
-                    if (parent.left != null) {
-                        parent.left.parent = parent;
-                    }
                 } else if (parent.right == this) {
                     parent.right = right != null ? right : left;
-                    if (parent.right != null) {
-                        parent.right.parent = parent;
-                    }
                 }
                 return true;
             }
