@@ -16,7 +16,7 @@ final class SudokuValidator {
             }
         }
         for (int row = 0; row < puzzle.length; row++) {
-            int column[] = new int[9];
+            int column[] = new int[puzzle[row].length];
             int index = 0;
             for (int col = 0; col < puzzle[row].length; col++) {
                 column[index++] = puzzle[col][row];
