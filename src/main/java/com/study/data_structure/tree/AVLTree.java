@@ -2,22 +2,26 @@ package com.study.data_structure.tree;
 
 import java.util.*;
 
-public class AVLTree<T extends Comparable<T>> {
+public class AVLTree<T extends Comparable<T>> implements Tree<T> {
 
-    private Node<T> root;
+    private Node root;
     private List<T> inorderList = new ArrayList<>();
     private boolean needRebalance;
 
+    @Override
     public void add(T value) {
         if (root == null) {
             root = new Node(value);
             return;
         }
-        if (root.add(value)) {
+        root.add(value);
+        if (needRebalance) {
             rebalance();
+            needRebalance = false;
         }
     }
 
+    @Override
     public T find(T value) {
         if (root == null || value == null) {
             return null;
@@ -25,6 +29,7 @@ public class AVLTree<T extends Comparable<T>> {
         return root.find(value);
     }
 
+    @Override
     public boolean remove(T value) {
         if (root == null || value == null) {
             return false;
@@ -41,6 +46,7 @@ public class AVLTree<T extends Comparable<T>> {
         return isRemoved;
     }
 
+    @Override
     public List<T> inorderTraverse() {
         inorderList.clear();
         if (root != null) {
@@ -49,7 +55,23 @@ public class AVLTree<T extends Comparable<T>> {
         return inorderList;
     }
 
-    private void inorderTraverse(Node<T> node) {
+    @Override
+    public List<T> breadthFirstTraverse() {
+        Queue<Node> children = new ArrayDeque<>();
+        children.add(root);
+        List<T> nodes = new ArrayList<>();
+        while (!children.isEmpty()) {
+            Node next = children.poll();
+            nodes.add(next.value);
+            if (next.left != null)
+                children.add(next.left);
+            if (next.right != null)
+                children.add(next.right);
+        }
+        return nodes;
+    }
+
+    private void inorderTraverse(Node node) {
         if (node.left != null) {
             inorderTraverse(node.left);
         }
@@ -90,6 +112,25 @@ public class AVLTree<T extends Comparable<T>> {
         root.updateChildrenHeight();
     }
 
+    private Node findDisbalance() {
+        Queue<Node> children = new ArrayDeque<>();
+        children.add(root);
+        Node node = null;
+        while (!children.isEmpty()) {
+            Node next = children.poll();
+            int leftH = next.left == null ? 0 : next.left.height;
+            int rightH = next.right == null ? 0 : next.right.height;
+            if (Math.abs(leftH - rightH) > 1) {
+                node = next;
+            }
+            if (next.left != null)
+                children.add(next.left);
+            if (next.right != null)
+                children.add(next.right);
+        }
+        return node;
+    }
+
     private Node findParent(Node node) {
         Queue<Node> children = new ArrayDeque<>();
         children.add(root);
@@ -122,14 +163,14 @@ public class AVLTree<T extends Comparable<T>> {
         }
     }
 
-    Node rightRotate(Node root) {
+    private Node rightRotate(Node root) {
         Node newRoot = root.left;
         root.left = newRoot.right;
         newRoot.right = root;
         return newRoot;
     }
 
-    Node leftRotate(Node root) {
+    private Node leftRotate(Node root) {
         Node newRoot = root.right;
         root.right = newRoot.left;
         newRoot.left = root;
@@ -160,48 +201,13 @@ public class AVLTree<T extends Comparable<T>> {
 
     @Override
     public String toString() {
-        List<Node> nodes = breadthFirstTraverse(root);
-        return Arrays.toString(nodes.toArray());
+        return Arrays.toString(breadthFirstTraverse().toArray());
     }
 
-    private Node findDisbalance() {
-        Queue<Node> children = new ArrayDeque<>();
-        children.add(root);
-        Node node = null;
-        while (!children.isEmpty()) {
-            Node next = children.poll();
-            int leftH = next.left == null ? 0 : next.left.height;
-            int rightH = next.right == null ? 0 : next.right.height;
-            if (Math.abs(leftH - rightH) > 1) {
-                node = next;
-            }
-            if (next.left != null)
-                children.add(next.left);
-            if (next.right != null)
-                children.add(next.right);
-        }
-        return node;
-    }
+    private class Node implements Tree.Node<T, Node> {
 
-    private List<Node> breadthFirstTraverse(Node root) {
-        Queue<Node> children = new ArrayDeque<>();
-        children.add(root);
-        List<Node> nodes = new ArrayList<>();
-        while (!children.isEmpty()) {
-            Node next = children.poll();
-            nodes.add(next);
-            if (next.left != null)
-                children.add(next.left);
-            if (next.right != null)
-                children.add(next.right);
-        }
-        return nodes;
-    }
-
-    private static class Node<T extends Comparable<T>> {
-
-        Node<T> left;
-        Node<T> right;
+        Node left;
+        Node right;
         T value;
         int height = 0;
 
@@ -209,7 +215,45 @@ public class AVLTree<T extends Comparable<T>> {
             this.value = value;
         }
 
-        boolean add(T value) {
+        @Override
+        public void add(T value) {
+            needRebalance = addVal(value);
+        }
+
+        @Override
+        public T find(T value) {
+            int comp = value.compareTo(this.value);
+            if (comp == 0) {
+                return value;
+            }
+            if (comp > 0) {
+                return right == null ? null : right.find(value);
+            } else {
+                return left == null ? null : left.find(value);
+            }
+        }
+
+        @Override
+        public boolean remove(T value, Node parent) {
+            int comp = value.compareTo(this.value);
+            if (comp > 0) {
+                return right != null && right.remove(value, this);
+            } else if (comp < 0) {
+                return left != null && left.remove(value, this);
+            } else {
+                if (left != null && right != null) {
+                    this.value = rightmost(left);
+                    left.remove(this.value, this);
+                } else if (parent.left == this) {
+                    parent.left = left != null ? left : right;
+                } else if (parent.right == this) {
+                    parent.right = right != null ? right : left;
+                }
+                return true;
+            }
+        }
+
+        public boolean addVal(T value) {
             int comp = value.compareTo(this.value);
             if (comp == 0) {
                 return false;
@@ -222,7 +266,7 @@ public class AVLTree<T extends Comparable<T>> {
                 left = new Node(value);
                 return right == null;
             } else {
-                return left.add(value);
+                return left.addVal(value);
             }
         }
 
@@ -231,7 +275,7 @@ public class AVLTree<T extends Comparable<T>> {
                 right = new Node(value);
                 return left == null;
             } else {
-                return right.add(value);
+                return right.addVal(value);
             }
         }
 
@@ -239,7 +283,7 @@ public class AVLTree<T extends Comparable<T>> {
             postorderTraverse(this);
         }
 
-        private void postorderTraverse(Node<T> node) {
+        private void postorderTraverse(Node node) {
             if (node.left != null) {
                 postorderTraverse(node.left);
             }
@@ -259,42 +303,11 @@ public class AVLTree<T extends Comparable<T>> {
             }
         }
 
-        boolean remove(T value, Node<T> parent) {
-            int comp = value.compareTo(this.value);
-            if (comp > 0) {
-                return right != null && right.remove(value, this);
-            } else if (comp < 0) {
-                return left != null && left.remove(value, this);
-            } else {
-                if (left != null && right != null) {
-                    this.value = rightmost(left);
-                    left.remove(this.value, this);
-                } else if (parent.left == this) {
-                    parent.left = left != null ? left : right;
-                } else if (parent.right == this) {
-                    parent.right = right != null ? right : left;
-                }
-                return true;
-            }
-        }
-
-        private T rightmost(Node<T> node) {
+        private T rightmost(Node node) {
             if (node.right != null) {
                 return rightmost(node.right);
             }
             return node.value;
-        }
-
-        T find(T value) {
-            int comp = value.compareTo(this.value);
-            if (comp == 0) {
-                return value;
-            }
-            if (comp > 0) {
-                return right == null ? null : right.find(value);
-            } else {
-                return left == null ? null : left.find(value);
-            }
         }
 
         @Override
