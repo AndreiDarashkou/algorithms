@@ -104,84 +104,58 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         }
 
         private void splitInnerNode(Node toSplit, T middle) {
-            boolean isLeaf = toSplit.children.isEmpty();
-
-            List<T> leftK = toSplit.keys.subList(0, keySize / 2);
-            List<Node> leftC = isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(0, toSplit.children.size() / 2);
-            Node leftN = new Node();
-            leftN.isLeaf = leftC.isEmpty();
-            leftN.keys.addAll(leftK);
-            leftN.children.addAll(leftC);
-            for (Node node : leftN.children) {
-                node.parent = leftN;
-                for (Node child : node.children) {
-                    child.parent = node;
-                }
-            }
-
-            List<T> rightK = toSplit.keys.subList(keySize / 2 + 1, keySize + 1);
-            List<Node> rightC = isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(toSplit.children.size() / 2, toSplit.children.size());
-            Node rightN = new Node();
-            rightN.isLeaf = rightC.isEmpty();
-            rightN.keys.addAll(rightK);
-            rightN.children.addAll(rightC);
-            for (Node node : rightN.children) {
-                node.parent = rightN;
-                for (Node child : node.children) {
-                    child.parent = node;
-                }
-            }
+            Node leftN = createLeftNode(toSplit, toSplit.parent);
+            Node rightN = createRightNode(toSplit, toSplit.parent);
 
             int index = toSplit.parent.childIndex(middle);
             toSplit.parent.keys.add(index, middle);
             toSplit.parent.children.add(index, leftN);
             toSplit.parent.children.add(index + 1, rightN);
             toSplit.parent.children.remove(toSplit);
-            leftN.parent = toSplit.parent;
-            rightN.parent = toSplit.parent;
             if (toSplit.parent.keys.size() > keySize) {
                 split(toSplit.parent);
             }
         }
 
         private void splitRoot(Node toSplit, T middle) {
-            boolean isLeaf = toSplit.children.isEmpty();
-
-            List<T> leftK = toSplit.keys.subList(0, keySize / 2);
-            List<Node> leftC = isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(0, childSize / 2 + 1);
-            Node leftN = new Node();
-            leftN.isLeaf = leftC.isEmpty();
-            leftN.keys.addAll(leftK);
-            leftN.children.addAll(leftC);
-            for (Node node : leftN.children) {
-                node.parent = leftN;
-                for (Node child : node.children) {
-                    child.parent = node;
-                }
-            }
-
-            List<T> rightK = toSplit.keys.subList(keySize / 2 + 1, keySize + 1);
-            List<Node> rightC = isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(childSize / 2 + 1, childSize + 1);
-            Node rightN = new Node();
-            rightN.isLeaf = rightC.isEmpty();
-            rightN.keys.addAll(rightK);
-            rightN.children.addAll(rightC);
-            for (Node node : rightN.children) {
-                node.parent = rightN;
-                for (Node child : node.children) {
-                    child.parent = node;
-                }
-            }
-
             Node newRoot = new Node();
             newRoot.isLeaf = false;
             newRoot.keys.add(middle);
+
+            Node leftN = createLeftNode(toSplit, newRoot);
+            Node rightN = createRightNode(toSplit, newRoot);
+
             newRoot.children.add(leftN);
             newRoot.children.add(rightN);
-            leftN.parent = newRoot;
-            rightN.parent = newRoot;
 
             root = newRoot;
+        }
+
+        private Node createLeftNode(Node toSplit, Node parent) {
+            List<T> leftKeys = toSplit.keys.subList(0, keySize / 2);
+            List<Node> leftChildren = toSplit.isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(0, toSplit.children.size() / 2);
+            return createNode(leftKeys, leftChildren, parent);
+        }
+
+        private Node createRightNode(Node toSplit, Node parent) {
+            List<T> rightKeys = toSplit.keys.subList(keySize / 2 + 1, keySize + 1);
+            List<Node> rightChildren = toSplit.isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(toSplit.children.size() / 2, toSplit.children.size());
+            return createNode(rightKeys, rightChildren, parent);
+        }
+
+        private Node createNode(List<T> keys, List<Node> children, Node parent) {
+            Node newNode = new Node();
+            newNode.isLeaf = children.isEmpty();
+            newNode.keys.addAll(keys);
+            newNode.children.addAll(children);
+            newNode.parent = parent;
+            for (Node node : newNode.children) {
+                node.parent = newNode;
+                for (Node child : node.children) {
+                    child.parent = node;
+                }
+            }
+            return newNode;
         }
 
         private int childIndex(T add) {
