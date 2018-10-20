@@ -49,16 +49,16 @@ public class BinaryTree<T extends Comparable<T>> implements Tree<T> {
     public List<T> breadthFirstTraverse() {
         Queue<BinaryNode> children = new ArrayDeque<>();
         children.add(root);
-        List<T> nodes = new ArrayList<>();
+        List<T> values = new ArrayList<>();
         while (!children.isEmpty()) {
             BinaryNode next = children.poll();
-            nodes.add(next.value);
+            values.add(next.value);
             if (next.left != null)
                 children.add(next.left);
             if (next.right != null)
                 children.add(next.right);
         }
-        return nodes;
+        return values;
     }
 
     private void inorderTraverse(BinaryNode node, List<T> inorderList) {

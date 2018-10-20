@@ -1,9 +1,6 @@
 package com.study.data_structure.tree;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BTree<T extends Comparable<T>> implements Tree<T> {
 
@@ -46,7 +43,15 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public List<T> breadthFirstTraverse() {
-        return null;
+        Queue<Node> children = new ArrayDeque<>();
+        children.add(root);
+        List<T> values = new ArrayList<>();
+        while (!children.isEmpty()) {
+            Node next = children.poll();
+            values.addAll(next.keys);
+            children.addAll(next.children);
+        }
+        return values;
     }
 
     @Override
