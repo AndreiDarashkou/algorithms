@@ -39,7 +39,9 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public List<T> inorderTraverse() {
-        return null;
+        List<T> inorderList = new ArrayList<>();
+        inorderTraverse(root, inorderList);
+        return inorderList;
     }
 
     @Override
@@ -47,6 +49,23 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return Arrays.toString(inorderTraverse().toArray());
+    }
+
+    private void inorderTraverse(Node node, List<T> inorderList) {
+        if (node.isLeaf) {
+            inorderList.addAll(node.keys);
+            return;
+        }
+        for (int i = 0; i < node.children.size(); i++) {
+            inorderTraverse(node.children.get(i), inorderList);
+            if (i < node.keys.size()) {
+                inorderList.add(node.keys.get(i));
+            }
+        }
+    }
 
     private class Node implements Tree.Node<T, Node> {
 
@@ -58,29 +77,16 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         Node() {
         }
 
-        Node(Node parent, List<T> keys) {
-            this.keys.addAll(keys);
-            this.parent = parent;
-        }
-
-        Node(List<T> keys, List<Node> children) {
-            this.keys.addAll(keys);
-            this.children.addAll(children);
-        }
-
         @Override
         public void add(T value) {
             if (keys.contains(value)) {
                 return;
             }
             if (isLeaf) {
-                if (keys.size() < keySize) {
-                    keys.add(value);
-                    Collections.sort(keys);
-                } else {
-                    T middle = keys.get(keySize / 2);
-                    split(middle);
-                    root.add(value);
+                keys.add(value);
+                Collections.sort(keys);
+                if (keys.size() > keySize) {
+                    split(this);
                 }
             } else {
                 int index = childIndex(value);
@@ -88,60 +94,94 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
             }
         }
 
-        private void split(T middle) {
-            if (parent == null) {
-                if (children.isEmpty()) {
-                    isLeaf = false;
-                    children.add(new Node(this, keys.subList(0, keySize / 2)));
-                    children.add(new Node(this, keys.subList(keySize / 2 + 1, keySize)));
-
-                    keys.clear();
-                    keys.add(middle);
-                } else {
-                    Node left = new Node(this, keys.subList(0, keySize / 2));
-                    left.isLeaf = false;
-                    left.children.addAll(children.subList(0, childSize / 2 + 1));
-                    for (Node child : left.children) {
-                        child.parent = left;
-                        child.isLeaf = child.children.isEmpty();
-                    }
-
-                    Node right = new Node(this, keys.subList(keySize / 2 + 1, keySize));
-                    right.isLeaf = false;
-                    right.children.addAll(children.subList(childSize / 2 + 1, childSize));
-                    for (Node child : right.children) {
-                        child.parent = right;
-                        child.isLeaf = child.children.isEmpty();
-                    }
-
-                    keys.clear();
-                    keys.add(middle);
-                    children.clear();
-                    children.add(left);
-                    children.add(right);
-                }
+        private void split(Node toSplit) {
+            T middle = toSplit.keys.get(keySize / 2);
+            if (toSplit.parent == null) {
+                splitRoot(toSplit, middle);
             } else {
-                if (parent.keys.size() < keySize) {
-                    int index = parent.addKey(middle);
-                    parent.addChildren(index, keys.subList(0, keySize / 2));
-                    parent.addChildren(index + 1, keys.subList(keySize / 2 + 1, keySize));
-                    parent.children.remove(this);
-                    parent.isLeaf = false;
-                    if (children.size() > 0) {
-                        parent.children.get(index).children.addAll(children.subList(0, childSize / 2 + 1));
-                        parent.children.get(index + 1).children.addAll(children.subList(childSize / 2 + 1, childSize));
-                    }
-                } else {
-                    parent.split(parent.keys.get(keySize / 2));
-                    split(middle);
-                }
+                splitInnerNode(toSplit, middle);
             }
         }
 
-        private int addKey(T value) {
-            int index = childIndex(value);
-            keys.add(index, value);
-            return index;
+        private void splitInnerNode(Node toSplit, T middle) {
+            boolean isLeaf = toSplit.children.isEmpty();
+
+            List<T> leftK = toSplit.keys.subList(0, keySize / 2);
+            List<Node> leftC = isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(0, toSplit.children.size() / 2);
+            Node leftN = new Node();
+            leftN.isLeaf = leftC.isEmpty();
+            leftN.keys.addAll(leftK);
+            leftN.children.addAll(leftC);
+            for (Node node : leftN.children) {
+                node.parent = leftN;
+                for (Node child : node.children) {
+                    child.parent = node;
+                }
+            }
+
+            List<T> rightK = toSplit.keys.subList(keySize / 2 + 1, keySize + 1);
+            List<Node> rightC = isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(toSplit.children.size() / 2, toSplit.children.size());
+            Node rightN = new Node();
+            rightN.isLeaf = rightC.isEmpty();
+            rightN.keys.addAll(rightK);
+            rightN.children.addAll(rightC);
+            for (Node node : rightN.children) {
+                node.parent = rightN;
+                for (Node child : node.children) {
+                    child.parent = node;
+                }
+            }
+
+            int index = toSplit.parent.childIndex(middle);
+            toSplit.parent.keys.add(index, middle);
+            toSplit.parent.children.add(index, leftN);
+            toSplit.parent.children.add(index + 1, rightN);
+            toSplit.parent.children.remove(toSplit);
+            leftN.parent = toSplit.parent;
+            rightN.parent = toSplit.parent;
+            if (toSplit.parent.keys.size() > keySize) {
+                split(toSplit.parent);
+            }
+        }
+
+        private void splitRoot(Node toSplit, T middle) {
+            boolean isLeaf = toSplit.children.isEmpty();
+
+            List<T> leftK = toSplit.keys.subList(0, keySize / 2);
+            List<Node> leftC = isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(0, childSize / 2 + 1);
+            Node leftN = new Node();
+            leftN.isLeaf = leftC.isEmpty();
+            leftN.keys.addAll(leftK);
+            leftN.children.addAll(leftC);
+            for (Node node : leftN.children) {
+                node.parent = leftN;
+                for (Node child : node.children) {
+                    child.parent = node;
+                }
+            }
+
+            List<T> rightK = toSplit.keys.subList(keySize / 2 + 1, keySize + 1);
+            List<Node> rightC = isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(childSize / 2 + 1, childSize + 1);
+            Node rightN = new Node();
+            rightN.isLeaf = rightC.isEmpty();
+            rightN.keys.addAll(rightK);
+            rightN.children.addAll(rightC);
+            for (Node node : rightN.children) {
+                node.parent = rightN;
+                for (Node child : node.children) {
+                    child.parent = node;
+                }
+            }
+
+            Node newRoot = new Node();
+            newRoot.isLeaf = false;
+            newRoot.keys.add(middle);
+            newRoot.children.add(leftN);
+            newRoot.children.add(rightN);
+            leftN.parent = newRoot;
+            rightN.parent = newRoot;
+
+            root = newRoot;
         }
 
         private int childIndex(T add) {
@@ -153,10 +193,6 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
                 index++;
             }
             return index;
-        }
-
-        private void addChildren(int index, List<T> keys) {
-            this.children.add(index, new Node(this, keys));
         }
 
         @Override
