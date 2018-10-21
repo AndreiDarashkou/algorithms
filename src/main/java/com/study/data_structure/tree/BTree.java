@@ -25,7 +25,7 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public T find(T value) {
-        if (root == null) {
+        if (root == null || value == null) {
             return null;
         }
         return root.find(value);
@@ -33,7 +33,7 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
 
     @Override
     public boolean remove(T value) {
-        if (root == null) {
+        if (root == null || value == null) {
             return false;
         }
         return root.remove(value, null);
@@ -169,7 +169,7 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
         public boolean remove(T value, Node parent) {
             if (this.keys.contains(value)) {
                 keys.remove(value);
-                if (!isLeaf || (isLeaf && keys.size() < degree && parent != null)) {
+                if (keys.size() < degree) {
                     this.rebalance(value);
                 }
                 return true;
@@ -185,7 +185,7 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
             if (!isLeaf) {
                 int index = childIndex(deleted);
                 Node right = children.get(index + 1);
-                Node leaf = right.children.get(0);
+                Node leaf = right.isLeaf ? right : right.children.get(0);
                 while (!leaf.isLeaf) {
                     leaf = leaf.children.get(0);
                 }
@@ -225,40 +225,26 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
             return parent.children.get(index + 1);
         }
 
-        private void rotate(Node sibling, boolean isLeftSibling) {
-            if (isLeftSibling) { //right rotate
-                if (!sibling.isLeaf) {
-                    Node lastChild = sibling.lastChild();
-                    sibling.children.remove(lastChild);
-                    children.add(0, lastChild);
-                    lastChild.parent = this;
-                }
-                T rightKey = sibling.lastKey();
-                int index = parent.childIndex(rightKey);
-                T parentKey = parent.keys.get(index);
-                parent.keys.remove(index);
-                parent.keys.add(index, rightKey);
-                keys.add(0, parentKey);
-                sibling.keys.remove(rightKey);
-            } else { //left rotate
-                if (!sibling.isLeaf) {
-                    Node firstChild = sibling.firstChild();
-                    sibling.children.remove(firstChild);
-                    children.add(firstChild);
-                    firstChild.parent = this;
-                }
-                T leftKey = sibling.firstKey();
-                int index = parent.childIndex(leftKey);
-                T parentKey = parent.keys.get(index);
-                parent.keys.remove(index);
-                parent.keys.add(index, leftKey);
-                keys.add(parentKey);
-                sibling.keys.remove(leftKey);
+        private void rotate(Node sibling, boolean isRightRotate) {
+            if (!sibling.isLeaf) {
+                Node child = isRightRotate ? sibling.lastChild() : sibling.firstChild();
+                sibling.children.remove(child);
+                children.add(isRightRotate ? 0 : children.size() - 1, child);
+                child.parent = this;
             }
+            T siblingKey = isRightRotate ? sibling.lastKey() : sibling.firstKey();
+            int index = parent.childIndex(siblingKey);
+            index = isRightRotate ? index : index - 1;
+            T parentKey = parent.keys.get(index);
+            parent.keys.remove(index);
+            parent.keys.add(index, siblingKey);
+            keys.add(isRightRotate ? 0 : keys.size() - 1, parentKey);
+            sibling.keys.remove(siblingKey);
         }
 
         private void merge(Node sibling, boolean isSiblingLeft) {
             int parentKey = parent.children.indexOf(this);
+            parentKey = isSiblingLeft ? parentKey - 1 : parentKey;
             if (isSiblingLeft) {
                 sibling.keys.add(parent.keys.get(parentKey));
                 sibling.keys.addAll(keys);
