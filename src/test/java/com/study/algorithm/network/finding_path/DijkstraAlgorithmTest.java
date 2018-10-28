@@ -1,11 +1,11 @@
-package com.study.algorithm.finding_path;
+package com.study.algorithm.network.finding_path;
 
+import com.study.algorithm.network.finding_path.DijkstraAlgorithm.Node;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RunWith(Parameterized.class)
 public class DijkstraAlgorithmTest {
 
-    private List<Node<Integer>> nodeList = new ArrayList<>();
+    private List<Node<Integer>> nodeList;
     private int startNodeId;
     private int targetNodeId;
     private int[] way;

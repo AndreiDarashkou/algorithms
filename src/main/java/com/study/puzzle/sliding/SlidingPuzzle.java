@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.study.algorithm.finding_path.DijkstraAlgorithm.findLowestCostWay;
+import static com.study.algorithm.network.finding_path.DijkstraAlgorithm.findLowestCostWay;
 import static com.study.puzzle.sliding.SlidingPuzzleGenerator.print;
 
 public class SlidingPuzzle {

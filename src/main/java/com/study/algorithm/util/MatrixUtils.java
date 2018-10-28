@@ -2,6 +2,8 @@ package com.study.algorithm.util;
 
 import java.math.BigInteger;
 
+import static java.lang.Integer.MAX_VALUE;
+
 public final class MatrixUtils {
     private MatrixUtils() {
     }
@@ -42,6 +44,54 @@ public final class MatrixUtils {
             }
         }
         return res;
+    }
+
+
+    public static int[][] transfromGridToAdjacencyMatrix(int[][] grid) {
+        int length = grid.length;
+        int size = length * length;
+        int[][] adj = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                adj[i][j] = i == j ? 0 : Integer.MAX_VALUE;
+            }
+        }
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                int node = i * length + j;
+                if (grid[i][j] == 0) {
+                    if (i > 0 && grid[i - 1][j] == 0) {
+                        adj[node][(i - 1) * length + j] = 1;
+                    }
+                    if (i < length - 1 && grid[i + 1][j] == 0) {
+                        adj[node][(i + 1) * length + j] = 1;
+                    }
+                    if (j > 0 && grid[i][j - 1] == 0) {
+                        adj[node][node - 1] = 1;
+                    }
+                    if (j < length - 1 && grid[i][j + 1] == 0) {
+                        adj[node][node + 1] = 1;
+                    }
+                }
+            }
+        }
+        return adj;
+    }
+
+    public static int[][] generateRandomAdjacencyMatrix(int vertexCount, int maxWeight) {
+        int[][] matrix = new int[vertexCount][vertexCount];
+        for (int i = 0; i < vertexCount; i++) {
+            for (int j = 0; j < vertexCount; j++) {
+                matrix[i][j] = i == j ? 0 : randWeight(maxWeight);
+            }
+        }
+        return matrix;
+    }
+
+    private static int randWeight(int maxValue) {
+        int nextRand = (int) (Math.random() * (maxValue + maxValue));
+        return nextRand >= maxValue ? MAX_VALUE : nextRand + 1;
     }
 
 }

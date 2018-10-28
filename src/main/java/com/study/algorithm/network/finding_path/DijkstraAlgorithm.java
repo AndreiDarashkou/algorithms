@@ -1,4 +1,4 @@
-package com.study.algorithm.finding_path;
+package com.study.algorithm.network.finding_path;
 
 import java.awt.*;
 import java.util.*;
@@ -7,6 +7,9 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public final class DijkstraAlgorithm {
+
+    private DijkstraAlgorithm(){
+    }
 
     public static <T> List<Node<T>> findLowestCostWay(Node<T> startNode, Node<T> targetNode) {
         Deque<Node<T>> open = new ArrayDeque<>();
@@ -83,6 +86,36 @@ public final class DijkstraAlgorithm {
         Point p1 = node.getValue();
         Point p2 = node2.getValue();
         return ((p1.x == p2.x) && Math.abs(p1.y - p2.y) == 1) || ((p1.y == p2.y) && Math.abs(p1.x - p2.x) == 1);
+    }
+
+    static class Node<T> {
+        private final T value;
+        int lowestCost;
+        boolean isVisited = false;
+        Node<T> parent;
+        Map<Node<T>, Integer> connections = new HashMap<>();
+
+        Node(T value) {
+            this.value = value;
+        }
+
+        T getValue() {
+            return value;
+        }
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node<?> node = (Node<?>) o;
+            return Objects.equals(value, node.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value);
+        }
     }
 
 }
