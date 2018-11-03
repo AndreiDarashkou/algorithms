@@ -16,7 +16,7 @@ public class SlidingPuzzle {
     }
 
     private final int[][] puzzle;
-    private final int[][] grid;
+    private final Integer[][] grid;
     private final int height;
     private final int width;
 
@@ -24,7 +24,7 @@ public class SlidingPuzzle {
         this.puzzle = puzzle;
         this.height = puzzle.length;
         this.width = puzzle[0].length;
-        this.grid = new int[height][width];
+        this.grid = new Integer[height][width];
     }
 
     public List<Integer> solve() {
