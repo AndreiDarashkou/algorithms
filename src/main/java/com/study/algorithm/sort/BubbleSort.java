@@ -1,7 +1,6 @@
 package com.study.algorithm.sort;
 
-
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.swap;
+import static com.study.algorithm.util.ArrayUtils.swap;
 
 public class BubbleSort {
 

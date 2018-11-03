@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.study.algorithm.network.finding_path.DijkstraAlgorithm.findLowestCostWay;
+import static com.study.algorithm.network.finding_path.DijkstraAlgorithm.findLowestCostPath;
 import static com.study.puzzle.sliding.SlidingPuzzleGenerator.print;
 
 public class SlidingPuzzle {
@@ -130,7 +130,7 @@ public class SlidingPuzzle {
     }
 
     private void move(Point actual, Point correct) {
-        List<Point> way = findLowestCostWay(grid, actual.x, actual.y, correct.x, correct.y);
+        List<Point> way = findLowestCostPath(grid, actual, correct);
         for (Point p : way) {
             grid[actual.x][actual.y] = 1;//freeze
             moveZero(p);
@@ -146,7 +146,7 @@ public class SlidingPuzzle {
 
     private void moveZero(Point to) {
         Point zero = getZero();
-        List<Point> way = findLowestCostWay(grid, zero.x, zero.y, to.x, to.y);
+        List<Point> way = findLowestCostPath(grid, zero, to);
         for (Point toPoint : way) {
             swap(getZero(), toPoint);
         }

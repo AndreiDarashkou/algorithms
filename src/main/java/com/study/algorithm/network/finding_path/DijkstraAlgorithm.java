@@ -4,26 +4,51 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public final class DijkstraAlgorithm {
 
-    private DijkstraAlgorithm(){
+    private DijkstraAlgorithm() {
     }
 
-    public static <T> List<Node<T>> findLowestCostWay(Node<T> startNode, Node<T> targetNode) {
-        Deque<Node<T>> open = new ArrayDeque<>();
-        open.add(startNode);
+    public static List<Node<Point>> findLowestCostWay(int[][] grid, Point from, Point to) {
+        Node<Point> toNode = calculateDistance(grid, from, to);
+
+        List<Node<Point>> closestWay = new ArrayList<>();
+        Node<Point> pointer = toNode;
+        while (pointer != null && pointer.parent != null) {
+            closestWay.add(pointer);
+            pointer = pointer.parent;
+        }
+        Collections.reverse(closestWay);
+        return closestWay;
+    }
+
+    public static List<Point> findLowestCostPath(int[][] grid, Point from, Point to) {
+        Node<Point> toNode = calculateDistance(grid, from, to);
+
+        List<Point> closestWay = new ArrayList<>();
+        Node<Point> pointer = toNode;
+        while (pointer != null && pointer.parent != null) {
+            closestWay.add(pointer.value);
+            pointer = pointer.parent;
+        }
+        Collections.reverse(closestWay);
+        return closestWay;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Node<Point> calculateDistance(int[][] grid, Point from, Point to) {
+        Node<Point>[][] nodeGrid = new Node[grid.length][grid.length];
+        Node<Point> toNode = initNodeGrid(nodeGrid, grid, to);
+
+        Deque<Node<Point>> open = new ArrayDeque<>();
+        open.add(nodeGrid[from.x][from.y]);
 
         while (!open.isEmpty()) {
-            Node<T> current = open.pop();
+            Node<Point> current = open.pop();
             current.isVisited = true;
-            List<Map.Entry<Node<T>, Integer>> neighborList = current.connections.entrySet().stream()
-                    .sorted(Map.Entry.comparingByValue())
-                    .collect(toList());
-
-            for (Map.Entry<Node<T>, Integer> entry : neighborList) {
-                Node<T> node = entry.getKey();
+            Set<Map.Entry<Node<Point>, Integer>> connections = current.connections.entrySet();
+            for (Map.Entry<Node<Point>, Integer> entry : connections) {
+                Node<Point> node = entry.getKey();
                 if (node.isVisited) {
                     continue;
                 }
@@ -36,56 +61,48 @@ public final class DijkstraAlgorithm {
                 }
             }
         }
-        List<Node<T>> closestWay = new ArrayList<>();
-        Node<T> pointer = targetNode;
-        do {
-            closestWay.add(pointer);
-            pointer = pointer.parent;
-        } while (pointer != null);
-        Collections.reverse(closestWay);
-
-        return closestWay;
+        return toNode;
     }
 
-    public static List<Point> findLowestCostWay(int[][] grid, int fromX, int fromY, int toX, int toY) {
-        List<Node<Point>> nodeList = new ArrayList<>();
-        for (int row = 0; row < grid.length; row++) {
-            for (int col = 0; col < grid[0].length; col++) {
-                if (grid[row][col] == 1) { //active == 0, inactive == 1
-                    continue;
-                }
-                nodeList.add(new Node<>(new Point(row, col)));
-            }
-        }
-        for (Node<Point> node : nodeList) {
-            Map<Node<Point>, Integer> connections = node.connections;
-            for (Node<Point> node2 : nodeList) {
-                if (isNeighbours(node, node2)) {
-                    connections.put(node2, 1);
+    private static Node<Point> initNodeGrid(Node<Point>[][] nodeGrid, int[][] grid, Point to) {
+        Node<Point> toNode = null;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                if (grid[i][j] == 0) {
+                    nodeGrid[i][j] = new Node<>(new Point(i, j));
+                    if (to.x == i && to.y == j) {
+                        toNode = nodeGrid[i][j];
+                    }
                 }
             }
         }
-        Node<Point> from = find(fromX, fromY, nodeList);
-        Node<Point> to = find(toX, toY, nodeList);
-        List<Node<Point>> way = findLowestCostWay(from, to);
-        way.remove(0);
-        return way.stream().map(Node::getValue).collect(toList());
-    }
-
-    private static Node<Point> find(int x, int y, List<Node<Point>> nodeList) {
-        Point p = new Point(x, y);
-        for (Node<Point> node : nodeList) {
-            if (node.getValue().equals(p)) {
-                return node;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                if (nodeGrid[i][j] != null) {
+                    initConnections(nodeGrid, nodeGrid[i][j]);
+                }
             }
         }
-        throw new IllegalArgumentException();
+        return toNode;
     }
 
-    private static boolean isNeighbours(Node<Point> node, Node<Point> node2) {
-        Point p1 = node.getValue();
-        Point p2 = node2.getValue();
-        return ((p1.x == p2.x) && Math.abs(p1.y - p2.y) == 1) || ((p1.y == p2.y) && Math.abs(p1.x - p2.x) == 1);
+    private static void initConnections(Node<Point>[][] grid, Node<Point> node) {
+        node.connections = new HashMap<>();
+        int x = node.value.x;
+        int y = node.value.y;
+
+        if (x - 1 >= 0 && grid[x - 1][y] != null) {//top
+            node.connections.put(grid[x - 1][y], Integer.MAX_VALUE);
+        }
+        if (y - 1 >= 0 && grid[x][y - 1] != null) {//left
+            node.connections.put(grid[x][y - 1], Integer.MAX_VALUE);
+        }
+        if (y + 1 < grid[x].length && grid[x][y + 1] != null) {//right
+            node.connections.put(grid[x][y + 1], Integer.MAX_VALUE);
+        }
+        if (x + 1 < grid.length && grid[x + 1][y] != null) {//bottom
+            node.connections.put(grid[x + 1][y], Integer.MAX_VALUE);
+        }
     }
 
     static class Node<T> {
@@ -97,24 +114,6 @@ public final class DijkstraAlgorithm {
 
         Node(T value) {
             this.value = value;
-        }
-
-        T getValue() {
-            return value;
-        }
-
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Node<?> node = (Node<?>) o;
-            return Objects.equals(value, node.value);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(value);
         }
     }
 
