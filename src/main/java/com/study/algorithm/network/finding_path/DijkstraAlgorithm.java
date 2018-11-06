@@ -39,13 +39,14 @@ public final class DijkstraAlgorithm {
         Node[][] nodeGrid = new Node[grid.length][grid.length];
         Node toNode = initNodeGrid(nodeGrid, grid, to);
 
-        Deque<Node> open = new ArrayDeque<>();
+        LinkedList<Node> open = new LinkedList<>();
         Node fromNode = nodeGrid[from.x][from.y];
         fromNode.lowestCost = 0;
         open.add(fromNode);
 
         while (!open.isEmpty()) {
-            Node current = open.pop();
+            Collections.sort(open);
+            Node current = open.removeFirst();
             current.isVisited = true;
             Set<Map.Entry<Node, Integer>> connections = current.connections.entrySet();//sort
             for (Map.Entry<Node, Integer> entry : connections) {
@@ -106,7 +107,7 @@ public final class DijkstraAlgorithm {
         }
     }
 
-    static class Node {
+    static class Node implements Comparable<Node>{
         Point value;
         int lowestCost;
         boolean isVisited = false;
@@ -115,6 +116,11 @@ public final class DijkstraAlgorithm {
 
         Node(Point value) {
             this.value = value;
+        }
+
+        @Override
+        public int compareTo(Node o) {
+            return lowestCost - o.lowestCost;
         }
     }
 

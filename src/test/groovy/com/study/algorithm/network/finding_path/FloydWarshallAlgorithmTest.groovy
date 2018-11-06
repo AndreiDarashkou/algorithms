@@ -11,7 +11,7 @@ class FloydWarshallAlgorithmTest extends Specification {
     @Unroll
     def "FindPath"() {
         expect:
-        FloydWarshallAlgorithm.findPath(grid as int[][], from, to) == path as List
+        FloydWarshallAlgorithm.findPath(grid as Integer[][], from, to) == path as List
         where:
         grid                 | from                  | to                   | path
         [[1, 0, 0, 0, 1, 1],
@@ -34,6 +34,13 @@ class FloydWarshallAlgorithmTest extends Specification {
          [0, 0, 0, 1, 0, 1],
          [0, 0, 0, 0, 1, 0],
          [1, 0, 1, 1, 1, 1]] | new Point(0, 3) | new Point(5, 1) | []
+
+        [[1, 0, 1, 0, 1, 1],
+         [1, 0, 0, 1, 0, 0],
+         [0, 0, 1, 0, 0, 1],
+         [0, 1, 0, 0, 0, 1],
+         [0, 0, 0, 0, 1, 0],
+         [1, 0, 1, 1, 1, 1]] | new Point(0, 1) | new Point(1, 5) | [7, 13, 12, 18, 24, 25, 26, 20, 21, 15, 16, 10, 11]
     }
 
 }

@@ -13,37 +13,7 @@ public final class FloydWarshallAlgorithm {
     private FloydWarshallAlgorithm() {
     }
 
-    public static void main(String[] args) {
-        String d = "......\n"+
-                "......\n"+
-                "......\n"+
-                "......\n"+
-                ".....W\n"+
-                "....W.";
-        System.out.println(pathFinder(d));
-    }
-
-    static boolean pathFinder(String maze) {
-        int[][] grid = convertStringToGrid(maze);
-        List<DijkstraAlgorithm.Node<Point>> way = DijkstraAlgorithm.findLowestCostWay(grid, new Point(0, 0), new Point(grid.length - 1, grid.length - 1));
-
-        return way.size() > 0;
-    }
-
-    private static int[][] convertStringToGrid(String maze) {
-        String[] rows = maze.split("\n");
-        int[][] grid = new int[rows.length][rows.length];
-        for (int i = 0; i < rows.length; i++) {
-            String row = rows[i];
-            char[] arr = row.toCharArray();
-            for (int c = 0; c < arr.length; c++) {
-                grid[i][c] = arr[c] == '.' ? 0 : 1;
-            }
-        }
-        return grid;
-    }
-
-    public static List<Integer> findPath(int[][] grid, Point from, Point to) {
+    public static List<Integer> findPath(Integer[][] grid, Point from, Point to) {
         int[][] adj = transfromGridToAdjacencyMatrix(grid);
         int[][] via = calculateDistance(adj);
         int size = grid.length;

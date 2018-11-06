@@ -47,7 +47,7 @@ public final class MatrixUtils {
     }
 
 
-    public static int[][] transfromGridToAdjacencyMatrix(int[][] grid) {
+    public static int[][] transfromGridToAdjacencyMatrix(Integer[][] grid) {
         int length = grid.length;
         int size = length * length;
         int[][] adj = new int[size][size];
@@ -60,7 +60,7 @@ public final class MatrixUtils {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
                 int node = i * length + j;
-                if (grid[i][j] == 0) {
+                if (grid[i][j] != null) {
                     if (i > 0 && grid[i - 1][j] == 0) {
                         adj[node][(i - 1) * length + j] = 1;
                     }
