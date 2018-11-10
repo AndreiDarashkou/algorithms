@@ -1,7 +1,5 @@
 package com.study.algorithm.string;
 
-import java.util.Arrays;
-
 public final class SearchSubstring {
 
     private SearchSubstring() {
@@ -37,22 +35,19 @@ public final class SearchSubstring {
         boolean isFound;
         char[] textArray = text.toCharArray();
         char[] subArray = substring.toCharArray();
-        char[] subSorted = substring.toCharArray();
-        Arrays.sort(subSorted);
-
         int lastIndex = subArray.length - 1;
 
-        for (int i = lastIndex; i < textArray.length; i++) {
-            if (Arrays.binarySearch(subSorted, textArray[i]) == -1) {
-                i += lastIndex;
-                continue;
-            }
-            if (subArray[lastIndex] != textArray[i]) {
-                continue;
-            }
+        for (int i = lastIndex; i < textArray.length; ) {
             isFound = true;
             for (int j = lastIndex; j >= 0; j--) {
-                if (subArray[j] != textArray[i - (lastIndex - j)]) {
+                int currIndex = i - (lastIndex - j);
+                if (subArray[j] != textArray[currIndex]) {
+                    int deltaIndex = search(subArray, textArray[currIndex]);
+                    if (deltaIndex == -1) {
+                        i += subArray.length;
+                    } else {
+                        i = i > currIndex + deltaIndex ? i + 1 : currIndex + deltaIndex;
+                    }
                     isFound = false;
                     break;
                 }
@@ -64,4 +59,12 @@ public final class SearchSubstring {
         return -1;
     }
 
+    private static int search(char[] array, char element) {
+        for (int i = 0; i < array.length; i++) {
+            if (element == array[i]) {
+                return array.length - i - 1;
+            }
+        }
+        return -1;
+    }
 }
