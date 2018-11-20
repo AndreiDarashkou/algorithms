@@ -151,13 +151,4 @@ public final class SudokuSolver {
         return true;
     }
 
-    private static void print(int[][] result) {
-        for (int[] row : result) {
-            System.out.println();
-            for (int num : row) {
-                System.out.print(num + " ");
-            }
-        }
-        System.out.println();
-    }
 }

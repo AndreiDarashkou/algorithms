@@ -37,4 +37,23 @@ public class ArrayUtils {
         return list.stream().mapToInt(Integer::intValue).toArray();
     }
 
+    public static void print(int[][] result) {
+        for (int[] row : result) {
+            System.out.println();
+            for (int num : row) {
+                System.out.print(num == 0 ? "- " : + num + " ");
+            }
+        }
+        System.out.println();
+    }
+
+    public static void print(Integer[][] result) {
+        for (Integer[] row : result) {
+            System.out.println();
+            for (Integer num : row) {
+                System.out.print(num == null ? " - " : " " + num + " ");
+            }
+        }
+        System.out.println();
+    }
 }
