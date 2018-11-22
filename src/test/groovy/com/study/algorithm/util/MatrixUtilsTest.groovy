@@ -1,6 +1,7 @@
 package com.study.algorithm.util
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class MatrixUtilsTest extends Specification {
 
@@ -18,6 +19,7 @@ class MatrixUtilsTest extends Specification {
         new int[8][13] | new int[13][5] | new int[8][5]
     }
 
+    @Unroll
     def "check mul result"() {
         expect:
         MatrixUtils.mul(mat1 as int[][], mat2 as int[][]) == resMat as int[][]
@@ -25,6 +27,7 @@ class MatrixUtilsTest extends Specification {
         mat1             | mat2             | resMat
         [[1, 1], [1, 1]] | [[1, 1], [1, 1]] | [[2, 2], [2, 2]]
         [[1, 2], [3, 4]] | [[6, 7], [3, 2]] | [[12, 11], [30, 29]]
+        [[2, 6], [1, 3]] | [[4, 5], [7, 8]] | [[50, 58], [25, 29]]
     }
 
 }

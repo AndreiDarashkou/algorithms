@@ -8,6 +8,7 @@ import static com.study.algorithm.network.neural.util.MathUtil.*;
 public class NeuralNetwork implements Network {
 
     private static final double MIN = 0.01d;
+    private static final double MAX = 0.5d;
 
     private final double learningRate;
 
@@ -17,8 +18,8 @@ public class NeuralNetwork implements Network {
     public NeuralNetwork(int inputSize, int hiddenSize, int outputSize, double learningRate) {
         this.learningRate = learningRate;
 
-        this.weightsHidden = getRandom(hiddenSize, inputSize, MIN, 0.5d);
-        this.outputWeights = getRandom(outputSize, hiddenSize, MIN, 0.5d);
+        this.weightsHidden = getRandom(hiddenSize, inputSize, MIN, MAX);
+        this.outputWeights = getRandom(outputSize, hiddenSize, MIN, MAX);
     }
 
     @Override
