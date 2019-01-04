@@ -1,6 +1,8 @@
 package com.study.algorithm.util;
 
 import java.math.BigInteger;
+import java.util.Collections;
+import java.util.Random;
 
 import static java.lang.Integer.MAX_VALUE;
 
@@ -13,13 +15,13 @@ public final class MatrixUtils {
         if (a == null || b == null || a[0].length != b.length) {
             throw new IllegalArgumentException("Unsuitable matrices");
         }
-        int cols = a.length;
-        int rows = b[0].length;
-        int res[][] = new int[cols][rows];
+        int rows = a.length;
+        int cols = b[0].length;
+        int res[][] = new int[rows][cols];
 
-        for (int i = 0; i < cols; i++) {
-            for (int j = 0; j < rows; j++) {
-                for (int k = 0; k < cols; k++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < a[0].length; k++) {
                     res[i][j] += a[i][k] * b[k][j];
                 }
             }
@@ -94,4 +96,39 @@ public final class MatrixUtils {
         return nextRand >= maxValue ? MAX_VALUE : nextRand + 1;
     }
 
+    public static void print(int[][] puzzle) {
+        print(puzzle, "|", "---");
+    }
+
+    public static void print(int[][] puzzle, String cellDelimiter, String rowDelimiter) {
+        StringBuilder builder = new StringBuilder();
+        String delimiter = String.join("", Collections.nCopies(puzzle.length, rowDelimiter));
+        builder.append(delimiter);
+        for (int[] row : puzzle) {
+            if (!rowDelimiter.isEmpty()) {
+                builder.append("\n");
+            }
+            builder.append(cellDelimiter);
+            for (int col = 0; col < puzzle[0].length; col++) {
+                builder.append(row[col]);
+                if (row[col] < 10) {
+                    builder.append(' ');
+                }
+                builder.append(cellDelimiter);
+            }
+            builder.append("\n").append(delimiter);
+        }
+        System.out.println("\n\n" + builder);
+    }
+
+    public static int[][] generateRandom(int rows, int cols, int min, int max) {
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = new Random().nextInt(min + max) - min + 1;
+            }
+        }
+
+        return result;
+    }
 }
