@@ -3,6 +3,9 @@ package com.study.puzzle.battleship;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * https://www.codewars.com/kata/battleship-field-validator/train/java
+ */
 public class BattleFieldValidator {
 
     public static boolean fieldValidator(int[][] field) {
