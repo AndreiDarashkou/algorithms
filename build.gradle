@@ -9,7 +9,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+!        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.2.0'
     }
 }
  
@@ -22,17 +22,18 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
     compile 'org.apache.commons:commons-collections4:4.0'
-    compile 'org.codehaus.groovy:groovy-all:2.5.0'
+    compile 'org.codehaus.groovy:groovy-all:3.0.7'
 
     testCompile(
-            'org.junit.jupiter:junit-jupiter-api:5.1.0',
-            'org.spockframework:spock-core:1.2-groovy-2.5'
+            'org.junit.jupiter:junit-jupiter-api:5.7.0',
+            'org.spockframework:spock-core:2.0-M4-groovy-3.0'
+
     )
     testRuntime(
-            'org.junit.jupiter:junit-jupiter-engine:5.1.0',
-            'org.junit.vintage:junit-vintage-engine:5.1.0',
-            'org.junit.platform:junit-platform-launcher:1.1.0',
-            'org.junit.platform:junit-platform-runner:1.1.0'
+            'org.junit.jupiter:junit-jupiter-engine:5.7.0',
+            'org.junit.vintage:junit-vintage-engine:5.7.0',
+            'org.junit.platform:junit-platform-launcher:1.7.0',
+            'org.junit.platform:junit-platform-runner:1.7.0'
     )
 }
 

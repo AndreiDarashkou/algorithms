@@ -8,9 +8,9 @@ class MathExpressionEvaluatorTest extends Specification {
     @Unroll
     def "expression #expression should be equal #result"() {
         expect:
-        MathExpressionEvaluator.calculate(expression) == resut
+        MathExpressionEvaluator.calculate(expression) == result
         where:
-        expression                 | resut
+        expression                 | result
         "(6 + -( -4))"             | 10.0
         "(6 + -(-4))"              | 10.0
         "6 + -4"                   | 2.0
