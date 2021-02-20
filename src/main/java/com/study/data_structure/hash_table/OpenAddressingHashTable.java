@@ -90,6 +90,7 @@ public class OpenAddressingHashTable<K, V> implements HashTable<K, V> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public V remove(K key) {
         int attempt = 0;
         int index = probingStrategy.nextIndex(key, attempt, capacity);
@@ -123,7 +124,6 @@ public class OpenAddressingHashTable<K, V> implements HashTable<K, V> {
         return loadFactor;
     }
 
-    @SuppressWarnings("unchecked")
     private void rehash() {
         if (capacity == MAX_CAPACITY) {
             throw new IllegalStateException("Cannot add more elements");
@@ -141,7 +141,7 @@ public class OpenAddressingHashTable<K, V> implements HashTable<K, V> {
     @SuppressWarnings("unchecked")
     private void init(int capacity, float loadFactor) {
         this.size = 0;
-        this.loadFactor = loadFactor >= 0.25f ? loadFactor : 0.25f;
+        this.loadFactor = Math.max(loadFactor, 0.25f);
         this.capacity = capacity;
         this.elements = new Entry[this.capacity];
     }

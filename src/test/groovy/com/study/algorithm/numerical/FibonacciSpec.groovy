@@ -3,7 +3,7 @@ package com.study.algorithm.numerical
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class FibonacciTest extends Specification {
+class FibonacciSpec extends Specification {
 
     @Unroll
     def "calcRecursive"() {

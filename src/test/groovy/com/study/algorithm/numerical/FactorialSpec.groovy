@@ -3,7 +3,7 @@ package com.study.algorithm.numerical
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class FactorialTest extends Specification {
+class FactorialSpec extends Specification {
 
     @Unroll
     def "CalcRecursive"() {
