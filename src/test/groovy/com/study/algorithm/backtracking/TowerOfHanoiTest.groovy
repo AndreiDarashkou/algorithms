@@ -1,10 +1,12 @@
 package com.study.algorithm.backtracking
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class TowerOfHanoiTest extends Specification {
 
-    def "Move"() {
+    @Unroll
+    def "should move #discCount disks from the first peg to the last of hanoi tower"() {
         given:
         def fromPeg = new TowerOfHanoi.Peg("From")
         (discCount..1).each {
@@ -18,7 +20,7 @@ class TowerOfHanoiTest extends Specification {
         fromPeg.disks.size() == 0
         auxiliary.disks.size() == 0
         toPeg.disks.size() == discCount
-        toPeg.disks.value == result as Stack
+        toPeg.disks == result as Stack
         where:
         discCount || result
         3         || [3, 2, 1]

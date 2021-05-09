@@ -2,6 +2,8 @@ package com.study.data_structure.tree;
 
 import java.util.*;
 
+import static java.util.Collections.emptyList;
+
 public class BTree<T extends Comparable<T>> implements Tree<T> {
 
     private final int degree;
@@ -140,13 +142,17 @@ public class BTree<T extends Comparable<T>> implements Tree<T> {
 
         private Node createLeftNode(Node toSplit, Node parent) {
             List<T> leftKeys = toSplit.keys.subList(0, degree);
-            List<Node> leftChildren = toSplit.isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(0, toSplit.children.size() / 2);
+            List<Node> leftChildren = toSplit.isLeaf
+                    ? emptyList()
+                    : toSplit.children.subList(0, toSplit.children.size() / 2);
             return createNode(leftKeys, leftChildren, parent);
         }
 
         private Node createRightNode(Node toSplit, Node parent) {
             List<T> rightKeys = toSplit.keys.subList(degree + 1, keySize + 1);
-            List<Node> rightChildren = toSplit.isLeaf ? Collections.EMPTY_LIST : toSplit.children.subList(toSplit.children.size() / 2, toSplit.children.size());
+            List<Node> rightChildren = toSplit.isLeaf
+                    ? emptyList()
+                    : toSplit.children.subList(toSplit.children.size() / 2, toSplit.children.size());
             return createNode(rightKeys, rightChildren, parent);
         }
 

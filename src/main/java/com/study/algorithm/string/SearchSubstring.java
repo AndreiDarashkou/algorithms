@@ -5,7 +5,6 @@ public final class SearchSubstring {
     private SearchSubstring() {
     }
 
-
     public static int search(String text, String substring) {
         if (substring.length() > text.length()) {
             return -1;
