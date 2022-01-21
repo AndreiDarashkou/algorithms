@@ -5,11 +5,11 @@ public class QuickSort {
     private QuickSort() {
     }
 
-    public static void sort(int array[]) {
+    public static void sort(int[] array) {
         sort(array, 0, array.length - 1);
     }
 
-    private static void sort(int array[], int left, int right) {
+    private static void sort(int[] array, int left, int right) {
         if (left >= right) {
             return;
         }
@@ -19,7 +19,7 @@ public class QuickSort {
         sort(array, delimiter + 1, right);
     }
 
-    private static int delimiter(int array[], int left, int right) {
+    private static int delimiter(int[] array, int left, int right) {
         int delimiter = array[left];
 
         while (true) {
